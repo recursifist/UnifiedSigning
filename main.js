@@ -1,0 +1,86 @@
+import utils from "./utils.js"
+import "./WebComponents/DocumentSelector.js"
+import "./WebComponents/DetailsForm.js"
+import "./WebComponents/AutoSigner.js"
+
+let $container = undefined
+let $entityName = 'individual'
+let $webpages = new Array()
+let $selected = new Array()
+
+const createContainer = () => {
+  const container = document.createElement('div')
+  container.id = 'UnifiedSigningContainer'
+
+  const root = document.getElementById("UnifiedSigningRoot")
+  root.appendChild(container)
+
+  return container
+}
+
+const createStep = (init, onDone) => {
+  const element = init()
+  element.addEventListener('completed', (event) => {
+    element.hidden = true
+    onDone(event.detail)
+  })
+  $container.appendChild(element)
+}
+
+const docSelectorStep = (onDone) => {
+  const init = () => {
+    const docSelector = document.createElement('document-selector')
+    docSelector.documents = $webpages.map(x => ({ title: x.title, selected: true }))
+    return docSelector
+  }
+  createStep(init, onDone)
+}
+
+const detailsFormStep = (onDone) => {
+  return (selectedDocs) => {
+    const init = () => {
+      const detailsForm = document.createElement('details-form')
+      $selected = selectedDocs
+      detailsForm.fields = $webpages
+        .filter(w => selectedDocs.includes(w.title))
+        .map(w => w.fields)
+        .flat(1)
+        .filter((x, i, self) => i === self.findIndex((t) => t.id === x.id))
+        .sort((a, b) => {
+          const aa = a.label.startsWith('[')
+          const bb = b.label.startsWith('[')
+          if (aa === bb) return 0
+          return aa ? 1 : -1
+        })
+      return detailsForm
+    }
+    createStep(init, onDone)
+  }
+}
+
+const autoSignerStep = () => {
+  return (details) => {
+    const init = () => {
+      const autoSigner = document.createElement('auto-signer')
+      autoSigner.documents = $selected
+      autoSigner.details = details
+      autoSigner.entity = $entityName
+      autoSigner.run()
+      return autoSigner
+    }
+    createStep(init, () => {})
+  }
+}
+
+const doStepFlow = utils.compose(docSelectorStep, detailsFormStep, autoSignerStep)
+
+const load = (entityName) => utils.onReady(async () => {
+  $entityName = entityName
+  $webpages = await utils.loadData(entityName)
+  $container = createContainer()
+  doStepFlow()
+})
+
+export default {
+  load
+}
