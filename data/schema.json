@@ -1,0 +1,106 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$comment": "The JSON schema for entering signing webpages",
+  "type": "object",
+  "required": [
+    "webpages"
+  ],
+  "properties": {
+    "webpages": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "title",
+          "url",
+          "auto",
+          "submit",
+          "fields"
+        ],
+        "properties": {
+          "title": {
+            "type": "string"
+          },
+          "url": {
+            "type": "string"
+          },
+          "actions": {
+            "$comment": "Actions to do before filling out form. Format: { uniqueQuerySelector: action }, e.g. { '#form': 'scrollTo' }, { '.tabs:nth-child(2): 'click' }",
+            "type": "array",
+            "items": {
+              "type": "object",
+              "minProperties": 1,
+              "maxProperties": 1,
+              "additionalProperties": {
+                "type": "string"
+              }
+            }
+          },
+          "auto": {
+            "$comment": "Form automation action: 'submit', 'complete' or 'none'",
+            "type": "string",
+            "enum": [
+              "submit",
+              "complete",
+              "none"
+            ]
+          },
+          "submit": {
+            "$comment": "Unique querySelector for submit button, e.g. '#submit-button', 'form button:nth-of-type(1)' ",
+            "type": "string"
+          },
+          "fields": {
+            "$comment": "Form fields",
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": [
+                "label",
+                "querySelector",
+                "inputType"
+              ],
+              "properties": {
+                "id": {
+                  "$comment": "Unified Signing label ID, e.g. 'full-name', 'email', 'country','existenial-safety-pledge-checkbox'",
+                  "type": "string"
+                },
+                "label": {
+                  "$comment": "Unified Signing display label, e.g. 'Full Name', 'Email', 'Country' - for long multi-line text, use '/n' for newline.",
+                  "type": "string"
+                },
+                "required": {
+                  "$comment": "Is it a required field, e.g. 'true', 'false'",
+                  "type": "boolean"
+                },
+                "querySelector": {
+                  "$comment": "Unique querySelector for webpage, e.g. '#name-input', 'form .actions button:nth-of-kind(2)', 'input[placeholder='Search here']' ",
+                  "type": "string"
+                },
+                "inputType": {
+                  "$comment": "Form input type",
+                  "oneOf": [
+                    {
+                      "type": "string",
+                      "enum": [
+                        "text",
+                        "textbox",
+                        "checkbox"
+                      ]
+                    },
+                    {
+                      "$comment": "Radio/dropdown input options e.g. ['a', 'b', 'c']",
+                      "type": "array"
+                    }
+                  ]
+                }
+              },
+              "additionalProperties": false
+            }
+          }
+        },
+        "additionalProperties": false
+      }
+    }
+  },
+  "additionalProperties": false
+}
