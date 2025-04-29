@@ -8,7 +8,7 @@ export default {
   },
   loadData: async (entityName) => {
     const t = Date.now()
-    const response = await fetch(`${config.server}data/${entityName}.json`)
+    const response = await fetch(`./data/${entityName}.json`)
     const jsonData = await response.json()
     return jsonData.webpages
   },
