@@ -27,8 +27,8 @@
           "inputType": "text"
         },
         {
-          "id": "existential-safety-pledge-consent",
-          "label": "[Existential Safety Pledge]\nI/we pledge that I/we will not intentionally contribute to any effort that I/we believe will result in a net risk of 0.1% or higher of causing humanity's extinction.\nI/we understand that the information submitted above will be made public while my/our email address will remain confidential and used solely for communications related to this pledge. I/we are participating voluntarily and may withdraw my/our consent at any time by contacting the pledge organizers.",
+          "id": "-consent-existential-safety-pledge",
+          "label": "I/we pledge that I/we will not intentionally contribute to any effort that I/we believe will result in a net risk of 0.1% or higher of causing humanity's extinction. I/we understand that the information submitted above will be made public while my/our email address will remain confidential and used solely for communications related to this pledge. I/we are participating voluntarily and may withdraw my/our consent at any time by contacting the pledge organizers.",
           "required": true,
           "querySelector": "form input[name='Consent']",
           "inputType": "checkbox"
@@ -36,7 +36,7 @@
       ]
     },
     {
-      "title": "international AI Governance Petition",
+      "title": "International AI Governance Petition",
       "url": "https://aigovernancepetition.org/",
       "auto": "submit",
       "actions": [
@@ -61,8 +61,8 @@
           "inputType": "text"
         },
         {
-          "id": "profession",
-          "label": "Profession",
+          "id": "job-title",
+          "label": "Job Title",
           "required": true,
           "querySelector": "form input[placeholder='Profession*']",
           "inputType": "text"
@@ -75,14 +75,15 @@
           "inputType": "text"
         },
         {
-          "id": "International-ai-governance-petition-consent",
-          "label": "[International AI Governance Petition]\nBy signing, I agree to join a global community of people advocating for responsible AI governance. \nI understand that the information submitted above will be made public, except for my email which will remain confidential and used solely for Center for Existential Safety communications.",
+          "id": "-consent-international-ai-governance-petition",
+          "label": "By signing, I agree to join a global community of people advocating for responsible AI governance. I understand that the information submitted above will be made public, except for my email which will remain confidential and used solely for Center for Existential Safety communications.",
           "required": true,
           "querySelector": "form input[name='Consent']",
           "inputType": "checkbox"
         }
       ]
-    },{
+    },
+    {
       "title": "International AI Governance Alliance Petition",
       "url": "https://www.iaiga.org/",
       "auto": "submit",
@@ -108,8 +109,8 @@
           "inputType": "text"
         },
         {
-          "id": "profession",
-          "label": "Profession",
+          "id": "job-title",
+          "label": "Job Title",
           "required": true,
           "querySelector": "form input[name='Profession']",
           "inputType": "text"
@@ -123,7 +124,7 @@
         },
         {
           "id": "country",
-          "label": "Country",
+          "label": "Country of Residence",
           "required": true,
           "querySelector": "form select[name='Country of Residence']",
           "inputType": [
@@ -326,11 +327,953 @@
           ]
         },
         {
-          "id": "international-ai-governance-petition-consent",
-          "label": "[International AI Governance Alliance Petition]\nBy signing, I agree to join a global community of people advocating for responsible AI governance. \nI understand that the information submitted above will be made public, except for my email which will remain confidential and used solely for International AI Governance Alliance communications.",
+          "id": "-consent-international-ai-governance-petition",
+          "label": "By signing, I agree to join a global community of people advocating for responsible AI governance. I understand that the information submitted above will be made public, except for my email which will remain confidential and used solely for International AI Governance Alliance communications.",
           "required": true,
           "querySelector": "form input[name='Consent Checkbox']",
           "inputType": "checkbox"
+        }
+      ]
+    },
+    {
+      "title": "Coalition for a Baruch Plan for AI Open Call",
+      "url": "https://www.cbpai.org/open-call-v1",
+      "auto": "none",
+      "actions": [
+        {
+          "#s-form-iframe-0": "iframe"
+        }
+      ],
+      "submit": "form .actions input[type='submit']",
+      "fields": [
+        {
+          "id": "first-name",
+          "label": "First Name",
+          "required": true,
+          "querySelector": "form input[name='firstname']",
+          "inputType": "text"
+        },
+        {
+          "id": "last-name",
+          "label": "Last Name",
+          "required": true,
+          "querySelector": "form input[name='lastname']",
+          "inputType": "text"
+        },
+        {
+          "id": "email",
+          "label": "Email",
+          "required": true,
+          "querySelector": "form input[name='email']",
+          "inputType": "text"
+        },
+        {
+          "id": "online-profile",
+          "label": "LinkedIn or personal online profile link",
+          "required": true,
+          "querySelector": "form input[name='linkedin_or_personal_online_profile_link']",
+          "inputType": "text"
+        },
+        {
+          "id": "-undersigner-type",
+          "label": "Include me as an Undersigner of:",
+          "required": true,
+          "querySelector": "form input[name='include_me_as_an_undersigner_of_']",
+          "inputType": [
+            "The Entire Open Call above",
+            "Only the Abstract"
+          ]
+        },
+        {
+          "id": "-profile-text",
+          "label": "Suggested 10-20 word profile to be published",
+          "required": false,
+          "querySelector": "form textarea[name='suggested_10_20_word_profile_to_be_published']",
+          "inputType": "textarea"
+        }
+      ]
+    },
+    {
+      "title": "ControlAI Public Statement",
+      "url": "https://controlai.com/open-statement",
+      "auto": "submit",
+      "actions": [
+        {
+          "form": "scrollTo"
+        }
+      ],
+      "submit": "form button[type='submit']",
+      "fields": [
+        {
+          "id": "first-name",
+          "label": "First Name",
+          "required": true,
+          "querySelector": "form input[name='FirstName']",
+          "inputType": "text"
+        },
+        {
+          "id": "last-name",
+          "label": "Last Name",
+          "required": true,
+          "querySelector": "form input[name='LastName']",
+          "inputType": "text"
+        },
+        {
+          "id": "email",
+          "label": "Email",
+          "required": true,
+          "querySelector": "form input[name='Email']",
+          "inputType": "text"
+        },
+        {
+          "id": "country",
+          "label": "Country of Residence",
+          "required": true,
+          "querySelector": "form input[name='Country']",
+          "inputType": "text"
+        }
+      ]
+    },
+    {
+      "title": "Statement on AI Risk",
+      "url": "https://safe.ai/work/statement-on-ai-risk",
+      "auto": "submit",
+      "actions": [
+        {
+          "#wf-form-Sign-Open-Letter": "scrollTo"
+        }
+      ],
+      "submit": "form button[type='submit']",
+      "fields": [
+        {
+          "id": "full-name",
+          "label": "Full Name",
+          "required": true,
+          "querySelector": "#Full-Name",
+          "inputType": "text"
+        },
+        {
+          "id": "email",
+          "label": "Work email",
+          "required": true,
+          "querySelector": "#Email-statement",
+          "inputType": "text"
+        },
+        {
+          "id": "job-title",
+          "label": "Job Title",
+          "required": true,
+          "querySelector": "#Title",
+          "inputType": "text"
+        },
+        {
+          "id": "affiliation",
+          "label": "Affiliation",
+          "required": true,
+          "querySelector": "#Affiliation",
+          "inputType": "text"
+        },
+        {
+          "id": "field",
+          "label": "Relevant category",
+          "required": false,
+          "querySelector": "select#field",
+          "inputType": [
+            "AI Scientists",
+            "Other Notable Figures"
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Pause Giant AI Experiments: An Open Letter",
+      "url": "https://futureoflife.org/open-letter/pause-giant-ai-experiments/",
+      "auto": "submit",
+      "actions": [
+        {
+          "#Add_signature_button": "click"
+        }
+      ],
+      "submit": ".wsf-group[data-group-index='3'] button[aria-label='Validate']",
+      "fields": [
+        {
+          "id": "full-name",
+          "label": "Full Name",
+          "required": true,
+          "querySelector": "form input",
+          "querySelectorAllIndex": 2,
+          "inputType": "text"
+        },
+        {
+          "id": "email",
+          "label": "Email",
+          "required": true,
+          "querySelector": "form input",
+          "querySelectorAllIndex": 3,
+          "inputType": "text"
+        },
+        {
+          "id": "job-title",
+          "label": "Job Title",
+          "required": false,
+          "querySelector": "form input",
+          "querySelectorAllIndex": 4,
+          "inputType": "text"
+        },
+        {
+          "id": "affiliation",
+          "label": "Affiliation",
+          "required": false,
+          "querySelector": "form input",
+          "querySelectorAllIndex": 5,
+          "inputType": "text",
+          "subActions": [
+            {
+              ".wsf-group[data-group-index='0'] button[type='button'][data-action='wsf-tab_next']": "click"
+            }
+          ]
+        },
+        {
+          "id": "noteworthy-honors",
+          "label": "Noteworthy Honors",
+          "required": false,
+          "querySelector": "form input",
+          "querySelectorAllIndex": 6,
+          "inputType": "text"
+        },
+        {
+          "id": "country",
+          "label": "Country of Residence",
+          "required": false,
+          "querySelector": "form input",
+          "querySelectorAllIndex": 7,
+          "inputType": "text"
+        },
+        {
+          "id": "country-nationality",
+          "label": "Country of Origin",
+          "required": false,
+          "querySelector": "form input",
+          "querySelectorAllIndex": 8,
+          "inputType": "text",
+          "subActions": [
+            {
+              ".wsf-group[data-group-index='1'] button[type='button'][data-action='wsf-tab_next']": "click"
+            }
+          ]
+        },
+        {
+          "id": "-signature-url",
+          "label": "Signature Declaration URL",
+          "required": false,
+          "querySelector": "form input[type='url']",
+          "inputType": "url",
+          "subActions": [
+            {
+              ".wsf-group[data-group-index='2'] button[type='button'][data-action='wsf-tab_next']": "click"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Open letter calling on world leaders to show long-view leadership on existential threats",
+      "url": "https://futureoflife.org/open-letter/long-view-leadership-on-existential-threats/",
+      "auto": "submit",
+      "actions": [
+        {
+          "#signature": "scrollTo"
+        }
+      ],
+      "submit": ".wsf-group[data-group-index='3'] button[aria-label='Validate']",
+      "fields": [
+        {
+          "id": "full-name",
+          "label": "Full Name",
+          "required": true,
+          "querySelector": "form input",
+          "querySelectorAllIndex": 2,
+          "inputType": "text"
+        },
+        {
+          "id": "email",
+          "label": "Email",
+          "required": true,
+          "querySelector": "form input",
+          "querySelectorAllIndex": 3,
+          "inputType": "text"
+        },
+        {
+          "id": "job-title",
+          "label": "Job Title",
+          "required": false,
+          "querySelector": "form input",
+          "querySelectorAllIndex": 4,
+          "inputType": "text"
+        },
+        {
+          "id": "affiliation",
+          "label": "Affiliation",
+          "required": false,
+          "querySelector": "form input",
+          "querySelectorAllIndex": 5,
+          "inputType": "text",
+          "subActions": [
+            {
+              ".wsf-group[data-group-index='0'] button[type='button'][data-action='wsf-tab_next']": "click"
+            }
+          ]
+        },
+        {
+          "id": "noteworthy-honors",
+          "label": "Noteworthy Honors",
+          "required": false,
+          "querySelector": "form input",
+          "querySelectorAllIndex": 6,
+          "inputType": "text"
+        },
+        {
+          "id": "country-nationality2",
+          "label": "Country of Origin",
+          "required": true,
+          "querySelector": "form select[autocomplete='country']",
+          "inputType": [
+            "Afghanistan", "Åland Islands", "Albania", "Algeria", "American Samoa", "Andorra", "Angola", "Anguilla", "Antarctica", "Antigua and Barbuda", "Argentina", "Armenia", "Aruba", "Australia", "Austria", "Azerbaijan", "Bahamas", "Bahrain", "Bangladesh", "Barbados", "Belarus", "Belgium", "Belize", "Benin", "Bermuda", "Bhutan", "Bolivia", "Bonaire, Sint Eustatius and Saba", "Bosnia and Herzegovina", "Botswana", "Bouvet Island", "Brazil", "British Indian Ocean Territory", "Brunei Darussalam", "Bulgaria", "Burkina Faso", "Burundi", "Cambodia", "Cameroon", "Canada", "Cape Verde", "Cayman Islands", "Central African Republic", "Chad", "Chile", "China", "Christmas Island", "Cocos (Keeling) Islands", "Colombia", "Comoros", "Congo", "Democratic Republic of the Congo", "Cook Islands", "Costa Rica", "Côte d'Ivoire", "Croatia", "Cuba", "Curaçao", "Cyprus", "Czech Republic", "Denmark", "Djibouti", "Dominica", "Dominican Republic", "Ecuador", "Egypt", "El Salvador", "Equatorial Guinea", "Eritrea", "Estonia", "Ethiopia", "Falkland Islands (Malvinas)", "Faroe Islands", "Fiji", "Finland", "France", "French Guiana", "French Polynesia", "French Southern Territories", "Gabon", "Gambia", "Georgia", "Germany", "Ghana", "Gibraltar", "Greece", "Greenland", "Grenada", "Guadeloupe", "Guam", "Guatemala", "Guernsey", "Guinea", "Guinea-Bissau", "Guyana", "Haiti", "Heard Island and McDonald Islands", "Holy See (Vatican City State)", "Honduras", "Hong Kong", "Hungary", "Iceland", "India", "Indonesia", "Iran", "Iraq", "Ireland", "Isle of Man", "Israel", "Italy", "Jamaica", "Japan", "Jersey", "Jordan", "Kazakhstan", "Kenya", "Kiribati", "Democratic People's Republic of Korea", "Republic of Korea", "Kuwait", "Kyrgyzstan", "Lao People's Democratic Republic", "Latvia", "Lebanon", "Lesotho", "Liberia", "Libya", "Liechtenstein", "Lithuania", "Luxembourg", "Macao", "North Macedonia", "Madagascar", "Malawi", "Malaysia", "Maldives", "Mali", "Malta", "Marshall Islands", "Martinique", "Mauritania", "Mauritius", "Mayotte", "Mexico", "Federated States of Micronesia", "Moldova", "Monaco", "Mongolia", "Montenegro", "Montserrat", "Morocco", "Mozambique", "Myanmar", "Namibia", "Nauru", "Nepal", "Netherlands", "New Caledonia", "New Zealand", "Nicaragua", "Niger", "Nigeria", "Niue", "Norfolk Island", "Northern Mariana Islands", "Norway", "Oman", "Pakistan", "Palau", "Palestine", "Panama", "Papua New Guinea", "Paraguay", "Peru", "Philippines", "Pitcairn", "Poland", "Portugal", "Puerto Rico", "Qatar", "Réunion", "Romania", "Russian Federation", "Rwanda", "Saint Barthélemy", "Saint Helena, Ascension and Tristan da Cunha", "Saint Kitts and Nevis", "Saint Lucia", "Saint Martin (French part)", "Saint Pierre and Miquelon", "Saint Vincent and the Grenadines", "Samoa", "San Marino", "Sao Tome and Principe", "Saudi Arabia", "Senegal", "Serbia", "Seychelles", "Sierra Leone", "Singapore", "Sint Maarten (Dutch part)", "Slovakia", "Slovenia", "Solomon Islands", "Somalia", "South Africa", "South Georgia and the South Sandwich Islands", "South Sudan", "Spain", "Sri Lanka", "Sudan", "Suriname", "Svalbard and Jan Mayen", "Eswatini", "Sweden", "Switzerland", "Syria", "Taiwan", "Tajikistan", "Tanzania", "Thailand", "Timor-Leste", "Togo", "Tokelau", "Tonga", "Trinidad and Tobago", "Tunisia", "Turkey", "Turkmenistan", "Turks and Caicos Islands", "Tuvalu", "Uganda", "Ukraine", "UAE", "UK", "USA", "United States Minor Outlying Islands", "Uruguay", "Uzbekistan", "Vanuatu", "Venezuela, Bolivarian Republic of", "Viet Nam", "British Virgin Islands", "Virgin Islands, U.S.", "Wallis and Futuna", "Western Sahara", "Yemen", "Zambia", "Zimbabwe"
+          ],
+          "subActions": [
+            {
+              ".wsf-group[data-group-index='1'] button[type='button'][data-action='wsf-tab_next']": "click"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Ban Superintelligence: Stop AI-Driven Human Extinction Risk Petition",
+      "url": "https://www.change.org/p/ban-superintelligence-stop-ai-driven-human-extinction-risk",
+      "auto": "submit",
+      "submit": "button[data-testid='signform-submit-button']",
+      "fields": [
+        {
+          "id": "first-name",
+          "label": "First Name",
+          "required": true,
+          "querySelector": "#signform-first-name-input",
+          "inputType": "text"
+        },
+        {
+          "id": "last-name",
+          "label": "Last Name",
+          "required": true,
+          "querySelector": "#signform-last-name-input",
+          "inputType": "text"
+        },
+        {
+          "id": "email",
+          "label": "Email",
+          "required": true,
+          "querySelector": "#signform-email-input",
+          "inputType": "text"
+        },
+        {
+          "id": "-consent-petition-wins-ban-superintelligence",
+          "label": "Tell me if this petition wins, and how I can help other relevant petitions",
+          "required": false,
+          "querySelector": "[data-testid='signform-gdprConsent-optIn-radio']",
+          "inputType": ["Yes", "No"]
+        },
+        {
+          "id": "-not-public-ban-superintelligence",
+          "label": "Do not display my name and comment on this petition",
+          "required": false,
+          "querySelector": "[data-testid='signform-notPublic-checkbox']",
+          "inputType": "checkbox"
+        }
+      ]
+    },
+    {
+      "title": "Time is running out: Demand responsible AI development! Petition",
+      "url": "https://www.change.org/p/artificial-intelligence-time-is-running-out-for-responsible-ai-development-2a2f1a13-b63a-4d8c-979b-b144bded2f48",
+      "auto": "submit",
+      "submit": "button[data-testid='signform-submit-button']",
+      "fields": [
+        {
+          "id": "first-name",
+          "label": "First Name",
+          "required": true,
+          "querySelector": "#signform-first-name-input",
+          "inputType": "text"
+        },
+        {
+          "id": "last-name",
+          "label": "Last Name",
+          "required": true,
+          "querySelector": "#signform-last-name-input",
+          "inputType": "text"
+        },
+        {
+          "id": "email",
+          "label": "Email",
+          "required": true,
+          "querySelector": "#signform-email-input",
+          "inputType": "text"
+        },
+        {
+          "id": "-consent-petition-wins-time-running",
+          "label": "Tell me if this petition wins, and how I can help other relevant petitions",
+          "required": false,
+          "querySelector": "[data-testid='signform-gdprConsent-optIn-radio']",
+          "inputType": ["Yes", "No"]
+        },
+        {
+          "id": "-not-public-time-running",
+          "label": "Do not display my name and comment on this petition",
+          "required": false,
+          "querySelector": "[data-testid='signform-notPublic-checkbox']",
+          "inputType": "checkbox"
+        }
+      ]
+    },
+    {
+      "title": "Urging an International AI Treaty: An Open Letter",
+      "url": "https://aitreaty.org/",
+      "auto": "none",
+      "actions": [
+        {
+          "form": "scrollTo"
+        }
+      ],
+      "submit": "form button[type='submit']",
+      "fields": [
+        {
+          "id": "full-name",
+          "label": "Full Name",
+          "required": true,
+          "querySelector": "form input",
+          "querySelectorAllIndex": 0,
+          "inputType": "text"
+        },
+        {
+          "id": "email",
+          "label": "Email",
+          "required": true,
+          "querySelector": "form input",
+          "querySelectorAllIndex": 1,
+          "inputType": "text"
+        },
+        {
+          "id": "job-title",
+          "label": "Job Title",
+          "required": false,
+          "querySelector": "form input",
+          "querySelectorAllIndex": 2,
+          "inputType": "text"
+        },
+        {
+          "id": "affiliation",
+          "label": "Affiliation",
+          "required": false,
+          "querySelector": "form input",
+          "querySelectorAllIndex": 3,
+          "inputType": "text"
+        },
+        {
+          "id": "noteworthy-honors",
+          "label": "Noteworthy Honors",
+          "required": false,
+          "querySelector": "form input[name='honors']",
+          "inputType": "text"
+        },
+        {
+          "id": "checkbox-notable-signatory",
+          "label": "Notable Signatory",
+          "required": false,
+          "querySelector": "#claims_notable",
+          "inputType": "checkbox"
+        }
+      ]
+    },
+    {
+      "title": "US must lead the way on a Global AI Treaty to ban unsafe superhuman AI",
+      "url": "https://www.change.org/p/the-us-must-lead-the-way-on-a-global-ai-treaty-to-ban-unsafe-superhuman-ai",
+      "auto": "submit",
+      "submit": "button[data-testid='signform-submit-button']",
+      "fields": [
+        {
+          "id": "first-name",
+          "label": "First Name",
+          "required": true,
+          "querySelector": "#signform-first-name-input",
+          "inputType": "text"
+        },
+        {
+          "id": "last-name",
+          "label": "Last Name",
+          "required": true,
+          "querySelector": "#signform-last-name-input",
+          "inputType": "text"
+        },
+        {
+          "id": "email",
+          "label": "Email",
+          "required": true,
+          "querySelector": "#signform-email-input",
+          "inputType": "text"
+        },
+        {
+          "id": "-consent-petition-wins-us-must",
+          "label": "Tell me if this petition wins, and how I can help other relevant petitions",
+          "required": false,
+          "querySelector": "[data-testid='signform-gdprConsent-optIn-radio']",
+          "inputType": ["Yes", "No"]
+        },
+        {
+          "id": "-not-public-us-must",
+          "label": "Do not display my name and comment on this petition",
+          "required": false,
+          "querySelector": "[data-testid='signform-notPublic-checkbox']",
+          "inputType": "checkbox"
+        }
+      ]
+    },
+    {
+      "title": "Lethal Autonomous Weapons Pledge",
+      "url": "https://futureoflife.org/open-letter/lethal-autonomous-weapons-pledge/",
+      "auto": "submit",
+      "actions": [
+        {
+          "#ss-form": "scrollTo"
+        }
+      ],
+      "submit": "#ss-submit",
+      "fields": [
+        {
+          "id": "full-name",
+          "label": "Full Name",
+          "required": true,
+          "querySelector": "input",
+          "querySelectorAllIndex": 3,
+          "inputType": "text"
+        },
+        {
+          "id": "job-title",
+          "label": "Job Title",
+          "required": false,
+          "querySelector": "input",
+          "querySelectorAllIndex": 4,
+          "inputType": "text"
+        },
+        {
+          "id": "email",
+          "label": "Email",
+          "required": true,
+          "querySelector": "input",
+          "querySelectorAllIndex": 5,
+          "inputType": "text"
+        },
+        {
+          "id": "affiliation",
+          "label": "Affiliation",
+          "required": false,
+          "querySelector": "input",
+          "querySelectorAllIndex": 6,
+          "inputType": "text"
+        },
+        {
+          "id": "entity",
+          "label": "Individual or Organization",
+          "required": false,
+          "querySelector": "select",
+          "inputType": [
+            "Individual",
+            "Organization"
+          ],
+          "subActions": [
+            {
+              "#ss-submit": "click",
+              "#signature": "scrollTo",
+              "#signup_form #part-one-values": "scrollTo"
+            }
+          ]
+        },
+        {
+          "id": "noteworthy-honors",
+          "label": "Noteworthy Honors",
+          "required": false,
+          "querySelector": "input",
+          "querySelectorAllIndex": 1,
+          "inputType": "text"
+        },
+        {
+          "id": "country",
+          "label": "Country of Residence",
+          "required": true,
+          "querySelector": "select",
+          "inputType": [
+            "Afghanistan",
+            "Albania",
+            "Algeria",
+            "Andorra",
+            "Angola",
+            "Antigua and Barbuda",
+            "Argentina",
+            "Armenia",
+            "Australia",
+            "Austria",
+            "Azerbaijan",
+            "Bahamas",
+            "Bahrain",
+            "Bangladesh",
+            "Barbados",
+            "Belarus",
+            "Belgium",
+            "Belize",
+            "Benin",
+            "Bhutan",
+            "Bolivia",
+            "Bosnia and Herzegovina",
+            "Botswana",
+            "Brazil",
+            "Brunei",
+            "Bulgaria",
+            "Burkina Faso",
+            "Burundi",
+            "Côte d'Ivoire",
+            "Cabo Verde",
+            "Cambodia",
+            "Cameroon",
+            "Canada",
+            "Central African Republic",
+            "Chad",
+            "Chile",
+            "China",
+            "Colombia",
+            "Comoros",
+            "Congo (Congo-Brazzaville)",
+            "Costa Rica",
+            "Croatia",
+            "Cuba",
+            "Cyprus",
+            "Czechia (Czech Republic)",
+            "Democratic Republic of the Congo",
+            "Denmark",
+            "Djibouti",
+            "Dominica",
+            "Dominican Republic",
+            "Ecuador",
+            "Egypt",
+            "El Salvador",
+            "Equatorial Guinea",
+            "Eritrea",
+            "Estonia",
+            "Eswatini",
+            "Ethiopia",
+            "Fiji",
+            "Finland",
+            "France",
+            "Gabon",
+            "Gambia",
+            "Georgia",
+            "Germany",
+            "Ghana",
+            "Greece",
+            "Grenada",
+            "Guatemala",
+            "Guinea",
+            "Guinea-Bissau",
+            "Guyana",
+            "Haiti",
+            "Holy See",
+            "Honduras",
+            "Hungary",
+            "Iceland",
+            "India",
+            "Indonesia",
+            "Iran",
+            "Iraq",
+            "Ireland",
+            "Israel",
+            "Italy",
+            "Jamaica",
+            "Japan",
+            "Jordan",
+            "Kazakhstan",
+            "Kenya",
+            "Kiribati",
+            "Kuwait",
+            "Kyrgyzstan",
+            "Laos",
+            "Latvia",
+            "Lebanon",
+            "Lesotho",
+            "Liberia",
+            "Libya",
+            "Liechtenstein",
+            "Lithuania",
+            "Luxembourg",
+            "Madagascar",
+            "Malawi",
+            "Malaysia",
+            "Maldives",
+            "Mali",
+            "Malta",
+            "Marshall Islands",
+            "Mauritania",
+            "Mauritius",
+            "Mexico",
+            "Micronesia",
+            "Moldova",
+            "Monaco",
+            "Mongolia",
+            "Montenegro",
+            "Morocco",
+            "Mozambique",
+            "Myanmar",
+            "Namibia",
+            "Nauru",
+            "Nepal",
+            "Netherlands",
+            "New Zealand",
+            "Nicaragua",
+            "Niger",
+            "Nigeria",
+            "North Korea",
+            "North Macedonia",
+            "Norway",
+            "Oman",
+            "Pakistan",
+            "Palau",
+            "Palestine State",
+            "Panama",
+            "Papua New Guinea",
+            "Paraguay",
+            "Peru",
+            "Philippines",
+            "Poland",
+            "Portugal",
+            "Qatar",
+            "Romania",
+            "Russia",
+            "Rwanda",
+            "Saint Kitts and Nevis",
+            "Saint Lucia",
+            "Saint Vincent and the Grenadines",
+            "Samoa",
+            "San Marino",
+            "Sao Tome and Principe",
+            "Saudi Arabia",
+            "Senegal",
+            "Serbia",
+            "Seychelles",
+            "Sierra Leone",
+            "Singapore",
+            "Slovakia",
+            "Slovenia",
+            "Solomon Islands",
+            "Somalia",
+            "South Africa",
+            "South Korea",
+            "South Sudan",
+            "Spain",
+            "Sri Lanka",
+            "Sudan",
+            "Suriname",
+            "Sweden",
+            "Switzerland",
+            "Syria",
+            "Tajikistan",
+            "Tanzania",
+            "Thailand",
+            "Timor-Leste",
+            "Togo",
+            "Tonga",
+            "Trinidad and Tobago",
+            "Tunisia",
+            "Turkey",
+            "Turkmenistan",
+            "Tuvalu",
+            "Uganda",
+            "Ukraine",
+            "United Arab Emirates",
+            "United Kingdom",
+            "United States of America",
+            "Uruguay",
+            "Uzbekistan",
+            "Vanuatu",
+            "Venezuela",
+            "Vietnam",
+            "Yemen",
+            "Zambia",
+            "Zimbabwe",
+            "Other"
+          ]
+        },
+        {
+          "id": "-important-statement",
+          "label": "Would you like to provide a statement about why this is important to you that we may share publicly or quote later?",
+          "required": false,
+          "querySelector": "input",
+          "querySelectorAllIndex": 3,
+          "inputType": "textarea"
+        }
+      ]
+    },
+    {
+      "title": "Autonomous Weapons Open Letter: AI & Robotics Researchers",
+      "url": "https://futureoflife.org/open-letter/open-letter-autonomous-weapons-ai-robotics/",
+      "auto": "none",
+      "submit": "",
+      "fields": []
+    },
+    {
+      "title": "Open Letter in Support of AB 501",
+      "url": "https://canicoalition.com/letter",
+      "auto": "submit",
+      "actions": [
+        {
+          "#sign-button": "click"
+        }
+      ],
+      "submit": "form button[type='submit']",
+      "fields": [
+        {
+          "id": "full-name",
+          "label": "Full Name",
+          "required": true,
+          "querySelector": "#name",
+          "inputType": "text"
+        },
+        {
+          "id": "email",
+          "label": "Email",
+          "required": true,
+          "querySelector": "#email",
+          "inputType": "text"
+        },
+        {
+          "id": "job-title",
+          "label": "Job Title",
+          "required": true,
+          "querySelector": "#title",
+          "inputType": "text"
+        },
+        {
+          "id": "affiliation",
+          "label": "Affiliation",
+          "required": true,
+          "querySelector": "#affiliation",
+          "inputType": "text"
+        },
+        {
+          "id": "-extra-statement",
+          "label": "ExtraStatement",
+          "required": false,
+          "querySelector": "#extraStatement",
+          "inputType": "textarea"
+        }
+      ]
+    },
+    {
+      "title": "Statement on AI training",
+      "url": "https://www.aitrainingstatement.org/",
+      "auto": "none",
+      "submit": "form button[type='submit']",
+      "fields": [
+        {
+          "id": "full-name",
+          "label": "Full Name",
+          "required": true,
+          "querySelector": "input",
+          "querySelectorAllIndex": 1,
+          "inputType": "text"
+        },
+        {
+          "id": "full-name",
+          "label": "Full Name",
+          "required": true,
+          "querySelector": "input",
+          "querySelectorAllIndex": 2,
+          "inputType": "text"
+        },
+        {
+          "id": "full-name",
+          "label": "Full Name",
+          "required": true,
+          "querySelector": "input",
+          "querySelectorAllIndex": 3,
+          "inputType": "text"
+        },
+        {
+          "id": "full-name",
+          "label": "Full Name",
+          "required": true,
+          "querySelector": "input",
+          "querySelectorAllIndex": 4,
+          "inputType": "text"
+        },
+        {
+          "id": "job-title",
+          "label": "Job Title",
+          "required": true,
+          "querySelector": "input",
+          "querySelectorAllIndex": 5,
+          "inputType": "text"
+        },
+        {
+          "id": "job-title",
+          "label": "Job Title",
+          "required": true,
+          "querySelector": "input",
+          "querySelectorAllIndex": 6,
+          "inputType": "text"
+        },
+        {
+          "id": "job-title",
+          "label": "Job Title",
+          "required": true,
+          "querySelector": "input",
+          "querySelectorAllIndex": 7,
+          "inputType": "text"
+        },
+        {
+          "id": "job-title",
+          "label": "Job Title",
+          "required": true,
+          "querySelector": "input",
+          "querySelectorAllIndex": 8,
+          "inputType": "text"
+        },
+        {
+          "id": "email",
+          "label": "Email",
+          "required": true,
+          "querySelector": "input",
+          "querySelectorAllIndex": 9,
+          "inputType": "text"
+        },
+        {
+          "id": "email",
+          "label": "Email",
+          "required": true,
+          "querySelector": "input",
+          "querySelectorAllIndex": 10,
+          "inputType": "text"
+        },
+        {
+          "id": "email",
+          "label": "Email",
+          "required": true,
+          "querySelector": "input",
+          "querySelectorAllIndex": 11,
+          "inputType": "text"
+        },
+        {
+          "id": "email",
+          "label": "Email",
+          "required": true,
+          "querySelector": "input",
+          "querySelectorAllIndex": 12,
+          "inputType": "text"
         }
       ]
     }

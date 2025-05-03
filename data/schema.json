@@ -61,7 +61,7 @@
               ],
               "properties": {
                 "id": {
-                  "$comment": "Unified Signing label ID, e.g. 'full-name', 'email', 'country','existenial-safety-pledge-checkbox'",
+                  "$comment": "Unified Signing label ID, e.g. 'full-name', 'email', 'country','-existenial-safety-pledge-checkbox' (Leading '-' forces webpage title display)",
                   "type": "string"
                 },
                 "label": {
@@ -76,6 +76,10 @@
                   "$comment": "Unique querySelector for webpage, e.g. '#name-input', 'form .actions button:nth-of-kind(2)', 'input[placeholder='Search here']' ",
                   "type": "string"
                 },
+                "querySelectorAllIndex": {
+                  "$comment": "For non-unique elements (using the querySelector above): querySelectorAll(querySelector)[querySelectorAllIndex]",
+                  "type": "integer"
+                },
                 "inputType": {
                   "$comment": "Form input type",
                   "oneOf": [
@@ -83,7 +87,8 @@
                       "type": "string",
                       "enum": [
                         "text",
-                        "textbox",
+                        "textarea",
+                        "url",
                         "checkbox"
                       ]
                     },
@@ -92,6 +97,16 @@
                       "type": "array"
                     }
                   ]
+                },
+                "subActions": {
+                  "$comment": "Subactions to do after filling out the field. Format: { '#nextStepButton'): 'click' }",
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "additionalProperties": {
+                      "type": "string"
+                    }
+                  }
                 }
               },
               "additionalProperties": false
