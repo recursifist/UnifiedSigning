@@ -24,6 +24,9 @@ class DetailsForm extends HTMLElement {
         case 'textarea':
           acc[field.id] = ''
           break
+        case 'url':
+          acc[field.id] = ''
+          break
         case 'checkbox':
           acc[field.id] = false
           break
@@ -40,44 +43,66 @@ class DetailsForm extends HTMLElement {
   }
 
   render() {
-    const style = `
-      <style>
-        .preLine {
-          white-space: pre-line;
-        }
-        input[type="checkbox"] span {
-        }
-      </style>
-    `
+    const style = `<link rel="stylesheet" href="./WebComponents/style.css">`
 
     const fieldsHtml = this.fields.map((field) => {
-      const requiredIndicator = field.required ? "<i>*</i>" : ""
+      let result = ''
+      const requiredIndicator = field.required ? "<i class='failureColor'>*</i>" : ""
+      const webpageTitle = (field.id.startsWith('-')) ? `<div class="subheader">${field.title}</div>` : ''
+
       switch (field.inputType) {
         case 'text':
-          return `
+          // TODO Handle FullName split to First/Last
+          result += `
             <label>
+              ${webpageTitle}
               ${field.label}${requiredIndicator}
               <br>
-              <input type="text" required="${field.required}" name="${field.id}" value="${this.fieldValues[field.id] || ''}"/>
+              <input type="text" 
+                name="${field.id}" value="${this.fieldValues[field.id] || ''}"
+                ${field.id === 'email' ? `pattern='${`[a-z0-9._%+\\-]+@[a-z0-9.\\-]+\\.[a-z]{2,}$`}'` : ""}
+                ${field.id === 'email' ? `placeholder='example@example.com'` : ""}
+                required="${field.required}"
+                />
             </label>
           `
+          break
         case 'textarea':
-          return `
-            <label>
+          result += `
+            <label class="full">
+              ${webpageTitle}
               ${field.label}${requiredIndicator}
               <br>
-              <textarea required="${field.required}" name="${field.id}">${this.fieldValues[field.id] || ''}</textarea>
+              <textarea name="${field.id}" required="${field.required}">
+                ${this.fieldValues[field.id] || ''}
+              </textarea>
             </label>
           `
-        case 'checkbox':
-          return `
+          break
+        case 'url':
+          result += `
             <label>
-              <div>
-                <input type="checkbox" name="${field.id}">
-                <span class="preLine">${field.label}</span>
-              </div>
+              ${webpageTitle}
+              ${field.label}${requiredIndicator}
+              <br>
+              <input type="url" 
+                name="${field.id}" value="${this.fieldValues[field.id] || ''}" 
+                pattern="${`https?://.+`}"
+                placeholder="https://"
+                required="${field.required}"
+                />
             </label>
           `
+          break
+        case 'checkbox':
+          result += `
+            <label class="full">
+              ${webpageTitle}
+              <input type="checkbox" name="${field.id}">
+              <span class="checkbox-text">${field.label}</span>
+            </label>
+          `
+          break
         default:
           if (Array.isArray(field.inputType)) {
             const subType = field.querySelector.includes('select') ? 'select' : 'radio'
@@ -85,43 +110,76 @@ class DetailsForm extends HTMLElement {
               const options = field.inputType.map((item, ii) => `
                 <option value="${item}" ${ii === 0 ? 'selected' : ''}>${item}</option>
               `).join('');
-              return `
-                <label for="${field.id}">${field.label}</label><br>
-                <select name="${field.id}" id="${field.id}">
-                  ${options}
-                </select><br>`
+              result += `
+                <label for="${field.id}">
+                ${webpageTitle}
+                ${field.label}<br>
+                  <select name="${field.id}" id="${field.id}">
+                    ${options}
+                  </select>
+                  ${webpageTitle}
+                </label>`
             } else {
-            const radios = field.inputType.map((item, ii) => `
-              <label>
-                ${item}
+              const radios = field.inputType.map((item, ii) => `
+              <label class='radio'>
                 <input type="radio" name="${field.id}" value="${item}" data-radio-group="${field.id}" ${ii > 0 ? '' : 'checked'} >
-              </label><br>
-            `).join('')
-            return `<legend>${field.label}</legend>${radios}`
+                ${item}
+              </label>
+              `).join('')
+              result +=
+                `<label>
+                <legend>
+                  ${webpageTitle}
+                  ${field.label}
+                </legend>
+                ${radios}
+              </label>`
             }
           }
-          return ''
+          break
       }
-    }).join('<br>')
+      return result
+    }).join('')
 
     this.shadowRoot.innerHTML = `
       ${style}
+      <div class="container">
       <form id="DetailsForm">
-        <p class="framer-text">Fill in your details:</p>
-        <div>
+        <h3 class="header">Fill in your details:</h3>
+        <div class="flex">
           ${fieldsHtml}
         </div>
-        <br>
-        <button id="submit-button" type="submit">Start</button>
+        <button id="submit-button" type="submit">Submit</button>
       </form>
+      </div>
     `
 
     this._addInputListeners()
 
     this.shadowRoot.getElementById('DetailsForm').onsubmit = (e) => {
       e.preventDefault()
-      //Validation
-      this.dispatchEvent(new CustomEvent('completed', { detail: this.fieldValues }))
+      const testing = false
+      const testData = {
+        "full-name": "Jack Harrison",
+        "email": "jharrison@gmail.com",
+        "job-title": "Chief Researcher",
+        "affiliation": "Ex-OpenAI",
+        "country": "Denmark",
+        "first-name": "Jack",
+        "last-name": "Harrison",
+        "field": "Other Notable Figures",
+        "noteworthy-honors": "Nobel Winner",
+        "country-nationality": "Denmark",
+        "country-nationality2": "Denmark",
+        "checkbox-notable-signatory": true,
+        "entity": "Individual",
+        "-consent-existential-safety-pledge": true,
+        "-consent-international-ai-governance-petition": true,
+        "-signature-url": "https://www.signature.com/jharrison",
+        "-important-statement": "Safety does not care about positive outcomes.",
+        "-extra-statement": "Safety isn't concerned over positive outcomes."
+      }
+      this.dispatchEvent(new CustomEvent('completed', { detail: testing ? testData : this.fieldValues }))
     }
   }
 
@@ -153,6 +211,13 @@ class DetailsForm extends HTMLElement {
         this.fieldValues[group] = e.target.value
       }
     })
+
+    this.shadowRoot.querySelector('.container').classList.add('hide')
+    this.shadowRoot.querySelector('.container').classList.remove('show')
+    setTimeout(() => {
+      this.shadowRoot.querySelector('.container').classList.remove('hide')
+      this.shadowRoot.querySelector('.container').classList.add('show')
+    }, 100)
   }
 }
 

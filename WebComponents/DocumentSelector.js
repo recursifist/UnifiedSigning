@@ -18,26 +18,22 @@ class DocumentSelector extends HTMLElement {
   }
 
   render() {
-    const style = `
-      <style>
-      </style>
-    `
+    const style = `<link rel="stylesheet" href="./WebComponents/style.css">`
 
     const checkboxes = this.documents.map((x, i) => `
-      <label>
+      <label class="full">
         <input type="checkbox" name="documentOptions" data-idx="${i}" ${x.selected ? 'checked' : ''}>
         ${x.title}
       </label>
-    `).join('<br>')
+    `).join('')
 
     this.shadowRoot.innerHTML = `
       ${style}
-      <div>
-        <p class="framer-text">Choose which documents to sign:</p>
+      <div class="container">
+        <h3 class="header">Choose which documents to sign:</h3>
         <div>
           ${checkboxes}
         </div>
-        <br>
         <button id="submit-button">Next</button>
       </div>
     `
@@ -51,9 +47,16 @@ class DocumentSelector extends HTMLElement {
       })
 
     this.shadowRoot.getElementById('submit-button').addEventListener('click', () => {
-        const selectedDocs = this.documents.filter(s => s.selected).map(d => d.title)
-        this.dispatchEvent(new CustomEvent('completed', { detail: selectedDocs }))
-      })
+      const selectedDocs = this.documents.filter(s => s.selected).map(d => d.title)
+      this.dispatchEvent(new CustomEvent('completed', { detail: selectedDocs }))
+    })
+
+    this.shadowRoot.querySelector('.container').classList.add('hide')
+    this.shadowRoot.querySelector('.container').classList.remove('show')
+    setTimeout(() => {
+      this.shadowRoot.querySelector('.container').classList.remove('hide')
+      this.shadowRoot.querySelector('.container').classList.add('show')
+    }, 100)
   }
 }
 
