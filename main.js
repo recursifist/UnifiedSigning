@@ -43,12 +43,18 @@ const detailsFormStep = (onDone) => {
       $selected = selectedDocs
       detailsForm.fields = $webpages
         .filter(w => selectedDocs.includes(w.title))
-        .map(w => w.fields)
+        .filter(w => w.auto !== 'none')
+        .flatMap(w =>
+          w.fields.map(f => ({
+            ...f,
+            title: w.title
+          }))
+        )
         .flat(1)
         .filter((x, i, self) => i === self.findIndex((t) => t.id === x.id))
         .sort((a, b) => {
-          const aa = a.label.startsWith('[')
-          const bb = b.label.startsWith('[')
+          const aa = a.id.startsWith('-')
+          const bb = b.id.startsWith('-')
           if (aa === bb) return 0
           return aa ? 1 : -1
         })
@@ -62,13 +68,17 @@ const autoSignerStep = () => {
   return (details) => {
     const init = () => {
       const autoSigner = document.createElement('auto-signer')
+      autoSigner.webpages = $webpages
+        .filter(w => $selected.includes(w.title))
+        .map(w => ({ title: w.title, url: w.url}))
       autoSigner.documents = $selected
       autoSigner.details = details
       autoSigner.entity = $entityName
       autoSigner.run()
+      autoSigner.addEventListener('retry', () => autoSigner.run())
       return autoSigner
     }
-    createStep(init, () => {})
+    createStep(init, () => { })
   }
 }
 
