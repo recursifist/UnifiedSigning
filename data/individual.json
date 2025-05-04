@@ -474,7 +474,7 @@
           "inputType": "text"
         },
         {
-          "id": "field",
+          "id": "-relevant-category",
           "label": "Relevant category",
           "required": false,
           "querySelector": "select#field",
@@ -1166,7 +1166,7 @@
         },
         {
           "id": "-extra-statement",
-          "label": "ExtraStatement",
+          "label": "Extra Statement",
           "required": false,
           "querySelector": "#extraStatement",
           "inputType": "textarea"
