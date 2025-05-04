@@ -181,8 +181,11 @@ const processWebpage = async (sendMsg, index, webpages, webpage, page, details, 
 
     // Submit form
     let submissionSuccess = false
-    if (page.$(webpage.submit)) submissionSuccess = true
-    await page.click(webpage.submit)
+    if (page.$(webpage.submit)) {
+      submissionSuccess = true
+      await takeScreenshot("success-", webpage, page)
+      await page.click(webpage.submit)
+    }
 
     if (submissionSuccess) {
       sendMsg('success', ((index + 1) / webpages?.length) * 100, false, webpage.title)
