@@ -21,23 +21,9 @@
   padding: var(--gap);
 }
 
-.container.hide::after {
-  color: var(--primary) !important;
-  content: 'Loading...';
-  display: block;
-  position: absolute;
-  text-align: left;
-  top: var(--gap);
-  left: var(--gap);
-}
-.container.hide * {
-  opacity: 0;
-  transition: opacity 1s ease;
-}
-
-.container.show * {
-  opacity: 1;
-  transition: opacity 1s ease;
+.container.loading * {
+  opacity: 1 !important;
+  transition: opacity 1s ease !important;
 }
 
 button, button:hover, button:active, button:focus {
@@ -59,11 +45,15 @@ button:hover {
 button:active {
   opacity: 0.8;
 }
+button:disabled {
+  opacity: 0.8;
+  filter: contrast(0.8)
+}
 
 input,
 input:hover,
 input:active,
-input:focus:hover:active:focus,
+input:focus,
 select,
 select:hover,
 select:active,
@@ -82,6 +72,9 @@ select:focus {
   margin-top: 1px;
   margin-bottom: -1px;
 }
+select:focus {
+  padding: 8px 3px;
+}
 
 input[type="text"], input[type="email"], input[type="url"], select {
   min-width: 90%;
@@ -95,8 +88,8 @@ textarea {
   min-width: 80%;
 }
 
-input[type="checkbox"], input[type="checkbox"]:active,
-input[type="radio"], input[type="radio"]:active {
+input[type="checkbox"], input[type="checkbox"]:focus, input[type="checkbox"]:active,
+input[type="radio"], input[type="radio"]:focus  input[type="radio"]:active {
   accent-color: var(--primary);
   width: 1em;
   height: 1em;
@@ -115,9 +108,13 @@ label:not(.radio) {
   max-width: 44%;
 }
 
-label.full{
+label.full {
   min-width: 100%;
   max-width: 100%;
+}
+
+label.bottom {
+  margin-top: var(--gap);
 }
 
 .radio{
@@ -161,9 +158,8 @@ a:hover {
 
 a.sublink {
   color: var(--primary);
-  font-weight: normal;
-  font-size: 16px;
-  margin-left: 4px;
+  font-weight: bold;
+  font-size: 14px;
 }
 
 .status-icon {

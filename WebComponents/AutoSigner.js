@@ -211,7 +211,15 @@ class AutoSigner extends HTMLElement {
   }
 
   render() {
-    const style = `<link rel="stylesheet" href="./WebComponents/style.css">`
+    const style = `
+      <style>
+      .loading * {
+          opacity: 0;
+          transition: opacity 1s ease;
+        }
+      </style>
+      <link rel="stylesheet" href="./WebComponents/style.css">
+    `
 
     const statusIcon = (index, url) => {
       const result = this.results[index].value
@@ -225,7 +233,8 @@ class AutoSigner extends HTMLElement {
     const statusMessage = (index, url) => {
       const result = this.results[index].value
       switch (result) {
-        case "failure": return `<br><span class='status-icon'> </span><a class='sublink' href='${url}' target='_blank'>Click to sign it manually</a>`
+        case "failure": return `<br><span class="status-icon"> </span>
+        <a class="sublink" href="${url}" target="_blank" rel="noopener noreferrer">Click to sign it manually ⇾</a>`
         default: return ''
       }
     }
@@ -250,7 +259,7 @@ class AutoSigner extends HTMLElement {
         <div>
             ${progressList}
             <br>
-            <i classs="subheader">Check your email for verification message(s).</i>
+            <i classs="subheader">May require email verification, please check your email.</i>
             <div id="retryContainer" ${this.showRetry ? '' : `class="hidden"`}">
               <br>
               <button id="retryButton">Retry</button>
@@ -259,16 +268,13 @@ class AutoSigner extends HTMLElement {
       </div>`
 
 
-    this.shadowRoot.getElementById('retryButton').addEventListener('click', () => {
-      this.dispatchEvent(new CustomEvent('retry'))
+    this.shadowRoot.getElementById('retryButton').addEventListener('click', (e) => {
+      e.target.disabled = true
+      setTimeout(() => {
+        this.dispatchEvent(new CustomEvent('retry'))
+      }, 1500)
     })
 
-    this.shadowRoot.querySelector('.container').classList.add('hide')
-    this.shadowRoot.querySelector('.container').classList.remove('show')
-    setTimeout(() => {
-      this.shadowRoot.querySelector('.container').classList.remove('hide')
-      this.shadowRoot.querySelector('.container').classList.add('show')
-    }, 100)
   }
 }
 

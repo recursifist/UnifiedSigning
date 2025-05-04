@@ -18,18 +18,27 @@ class DocumentSelector extends HTMLElement {
   }
 
   render() {
-    const style = `<link rel="stylesheet" href="./WebComponents/style.css">`
+    const style = `
+        <style>
+          .loading * {
+            opacity: 0;
+            transition: opacity 1s ease;
+          }
+        </style>
+        <link rel="stylesheet" href="./WebComponents/style.css">
+      `
 
     const checkboxes = this.documents.map((x, i) => `
       <label class="full">
         <input type="checkbox" name="documentOptions" data-idx="${i}" ${x.selected ? 'checked' : ''}>
         ${x.title}
+        <a class="sublink" href="${x.url}" target="_blank" rel="noopener noreferrer">[view]</a>
       </label>
     `).join('')
 
     this.shadowRoot.innerHTML = `
       ${style}
-      <div class="container">
+      <div class="container loading">
         <h3 class="header">Choose which documents to sign:</h3>
         <div>
           ${checkboxes}
@@ -51,12 +60,6 @@ class DocumentSelector extends HTMLElement {
       this.dispatchEvent(new CustomEvent('completed', { detail: selectedDocs }))
     })
 
-    this.shadowRoot.querySelector('.container').classList.add('hide')
-    this.shadowRoot.querySelector('.container').classList.remove('show')
-    setTimeout(() => {
-      this.shadowRoot.querySelector('.container').classList.remove('hide')
-      this.shadowRoot.querySelector('.container').classList.add('show')
-    }, 100)
   }
 }
 

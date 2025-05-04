@@ -3,20 +3,20 @@ class DetailsForm extends HTMLElement {
     super()
     this.attachShadow({ mode: 'open' })
     this.fields = new Array()
-    this.fieldValues = new Object()
+    this.details = new Object()
   }
 
   set fields(arr) {
-    this._fields = arr
-    this._initFieldValues()
+    this._fields = this.sortFields(arr)
+    this._initfieldDetails()
     this.render()
   }
   get fields() {
     return this._fields || []
   }
 
-  _initFieldValues() {
-    this.fieldValues = this.fields.reduce((acc, field) => {
+  _initfieldDetails() {
+    this.details = this.fields.reduce((acc, field) => {
       switch (field.inputType) {
         case 'text':
           acc[field.id] = ''
@@ -38,43 +38,109 @@ class DetailsForm extends HTMLElement {
     }, {})
   }
 
+  sortFields(arr) {
+    const priorityOrder = ['full-name', 'first-name', 'last-name', 'email', 'job-title', 'affiliation']
+
+    arr.sort((a, b) => {
+      const getPriority = (item) => {
+        if (item.id.startsWith('-')) return 1000
+        const idx = priorityOrder.indexOf(item.id)
+        if (idx !== -1) return idx
+        if (item.id.includes('country')) return priorityOrder.length
+        return priorityOrder.length + 1
+      }
+
+      const prioA = getPriority(a)
+      const prioB = getPriority(b)
+
+      if (prioA !== prioB) return prioA - prioB
+
+      if (prioA === 1000) {
+        const titleA = a.title || '';
+        const titleB = b.title || '';
+        return titleA.localeCompare(titleB);
+      }
+
+      return a.id.localeCompare(b.id)
+    })
+
+    return arr
+  }
+
+  hasFirstLastNames() {
+    return this.fields.some(x => ['first-name', 'last-name'].includes(x.id))
+  }
+
+  hasFullName() {
+    return this.fields.some(x => x.id === 'full-name')
+  }
+
   connectedCallback() {
     this.render()
   }
 
   render() {
-    const style = `<link rel="stylesheet" href="./WebComponents/style.css">`
+    const style = `
+      <style>
+      .loading * {
+          opacity: 0;
+          transition: opacity 1s ease;
+        }
+      </style>
+      <link rel="stylesheet" href="./WebComponents/style.css">
+    `
 
+    let lastWebpageTitle = ''
     const fieldsHtml = this.fields.map((field) => {
       let result = ''
       const requiredIndicator = field.required ? "<i class='failureColor'>*</i>" : ""
       const webpageTitle = (field.id.startsWith('-')) ? `<div class="subheader">${field.title}</div>` : ''
 
+      if (webpageTitle.length > 0 && lastWebpageTitle !== webpageTitle) {
+        lastWebpageTitle = webpageTitle
+        result += `<label class="full bottom">${webpageTitle}</label>`
+      }
+
       switch (field.inputType) {
         case 'text':
-          // TODO Handle FullName split to First/Last
-          result += `
-            <label>
-              ${webpageTitle}
-              ${field.label}${requiredIndicator}
-              <br>
-              <input type="text" 
-                name="${field.id}" value="${this.fieldValues[field.id] || ''}"
-                ${field.id === 'email' ? `pattern='${`[a-z0-9._%+\\-]+@[a-z0-9.\\-]+\\.[a-z]{2,}$`}'` : ""}
-                ${field.id === 'email' ? `placeholder='example@example.com'` : ""}
-                required="${field.required}"
-                />
-            </label>
+          if (field.id === 'full-name') {
+            if (this.hasFirstLastNames()) { }
+            else {
+              result += `
+                <label>
+                  First Name ${requiredIndicator}
+                  <br>
+                  <input type="text" name="first-name" ${field.required ? 'required="true"' : ''} />
+                </label>
+                <label>
+                  Last Name ${requiredIndicator}
+                  <br>
+                  <input type="text" name="last-name" ${field.required ? 'required="true"' : ''} />
+                </label>
+              `
+            }
+          } else {
+            result += `
+              <label>
+                ${field.label}${requiredIndicator}
+                <br>
+                <input type="text" 
+                  name="${field.id}" value="${this.details[field.id] || ''}"
+                  ${field.id === 'email' ? `pattern='${`[a-z0-9._%+\\-]+@[a-z0-9.\\-]+\\.[a-z]{2,}$`}'` : ""}
+                  ${field.id === 'email' ? `placeholder='example@example.com'` : ""}
+                  ${field.required ? 'required="true"' : ''}
+                  />
+              </label>
           `
+          }
           break
         case 'textarea':
           result += `
             <label class="full">
-              ${webpageTitle}
               ${field.label}${requiredIndicator}
               <br>
-              <textarea name="${field.id}" required="${field.required}">
-                ${this.fieldValues[field.id] || ''}
+              <textarea name="${field.id}" ${field.required ? 'required="true"' : ''}>
+                ${this.details[field.id] || ''}
               </textarea>
             </label>
           `
@@ -82,14 +148,13 @@ class DetailsForm extends HTMLElement {
         case 'url':
           result += `
             <label>
-              ${webpageTitle}
               ${field.label}${requiredIndicator}
               <br>
               <input type="url" 
-                name="${field.id}" value="${this.fieldValues[field.id] || ''}" 
+                name="${field.id}" value="${this.details[field.id] || ''}" 
                 pattern="${`https?://.+`}"
                 placeholder="https://"
-                required="${field.required}"
+                ${field.required ? 'required="true"' : ''}
                 />
             </label>
           `
@@ -97,7 +162,6 @@ class DetailsForm extends HTMLElement {
         case 'checkbox':
           result += `
             <label class="full">
-              ${webpageTitle}
               <input type="checkbox" name="${field.id}">
               <span class="checkbox-text">${field.label}</span>
             </label>
@@ -112,12 +176,10 @@ class DetailsForm extends HTMLElement {
               `).join('');
               result += `
                 <label for="${field.id}">
-                ${webpageTitle}
                 ${field.label}<br>
                   <select name="${field.id}" id="${field.id}">
                     ${options}
                   </select>
-                  ${webpageTitle}
                 </label>`
             } else {
               const radios = field.inputType.map((item, ii) => `
@@ -129,7 +191,6 @@ class DetailsForm extends HTMLElement {
               result +=
                 `<label>
                 <legend>
-                  ${webpageTitle}
                   ${field.label}
                 </legend>
                 ${radios}
@@ -159,27 +220,33 @@ class DetailsForm extends HTMLElement {
     this.shadowRoot.getElementById('DetailsForm').onsubmit = (e) => {
       e.preventDefault()
       const testing = false
-      const testData = {
-        "full-name": "Jack Harrison",
-        "email": "jharrison@gmail.com",
-        "job-title": "Chief Researcher",
-        "affiliation": "Ex-OpenAI",
-        "country": "Denmark",
-        "first-name": "Jack",
-        "last-name": "Harrison",
-        "field": "Other Notable Figures",
-        "noteworthy-honors": "Nobel Winner",
-        "country-nationality": "Denmark",
-        "country-nationality2": "Denmark",
-        "checkbox-notable-signatory": true,
+      const testData =
+      {
+        "full-name": "A. Turing",
+        "first-name": "A.",
+        "last-name": "Turing",
+        "email": "demo@test.com",
+        "country": "Norway",
+        "country-nationality": "Canada",
+        "country-nationality2": "Canada",
+        "affiliation": "-",
         "entity": "Individual",
+        "field": "AI Scientists",
+        "job-title": "Software Developer",
+        "noteworthy-honors": "-",
         "-consent-existential-safety-pledge": true,
         "-consent-international-ai-governance-petition": true,
-        "-signature-url": "https://www.signature.com/jharrison",
-        "-important-statement": "Safety does not care about positive outcomes.",
-        "-extra-statement": "Safety isn't concerned over positive outcomes."
+        "-consent-petition-wins-ban-superintelligence": "No",
+        "-consent-petition-wins-time-running": "No",
+        "-consent-petition-wins-us-must": "No",
+        "-extra-statement": "",
+        "-important-statement": "",
+        "-not-public-ban-superintelligence": false,
+        "-not-public-time-running": false,
+        "-not-public-us-must": false,
+        "-signature-url": ""
       }
-      this.dispatchEvent(new CustomEvent('completed', { detail: testing ? testData : this.fieldValues }))
+      this.dispatchEvent(new CustomEvent('completed', { detail: testing ? testData : this.details }))
     }
   }
 
@@ -187,37 +254,35 @@ class DetailsForm extends HTMLElement {
     this.shadowRoot.querySelectorAll('input[type="text"], textarea').forEach(input => {
       input.onchange = (e) => {
         const name = e.target.getAttribute('name')
-        this.fieldValues[name] = e.target.value
+        if (['first-name', 'last-name'].includes(name) && this.hasFullName()) {
+          const first = this.shadowRoot.querySelector('input[name="first-name"')?.value
+          const last = this.shadowRoot.querySelector('input[name="last-name"')?.value
+          this.details['full-name'] = first + " " + last
+        }
+        this.details[name] = e.target.value
       }
     })
 
     this.shadowRoot.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
       checkbox.onchange = (e) => {
         const name = e.target.getAttribute('name')
-        this.fieldValues[name] = e.target.checked
+        this.details[name] = e.target.checked
       }
     })
 
     this.shadowRoot.querySelectorAll('select').forEach(select => {
       select.addEventListener('change', (e) => {
         const group = e.target.getAttribute('name')
-        this.fieldValues[group] = e.target.value
+        this.details[group] = e.target.value
       })
     })
 
     this.shadowRoot.querySelectorAll('input[type="radio"]').forEach(radio => {
       radio.onchange = (e) => {
         const group = e.target.getAttribute('name')
-        this.fieldValues[group] = e.target.value
+        this.details[group] = e.target.value
       }
     })
-
-    this.shadowRoot.querySelector('.container').classList.add('hide')
-    this.shadowRoot.querySelector('.container').classList.remove('show')
-    setTimeout(() => {
-      this.shadowRoot.querySelector('.container').classList.remove('hide')
-      this.shadowRoot.querySelector('.container').classList.add('show')
-    }, 100)
   }
 }
 
