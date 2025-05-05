@@ -25,14 +25,20 @@ class DocumentSelector extends HTMLElement {
             transition: opacity 1s ease;
           }
         </style>
-        <link rel="stylesheet" href="./WebComponents/style.css">
+        <link rel="stylesheet" href="./WebComponents/style.min.css">
       `
 
     const checkboxes = this.documents.map((x, i) => `
       <label class="full">
-        <input type="checkbox" name="documentOptions" data-idx="${i}" ${x.selected ? 'checked' : ''}>
-        ${x.title}
-        <a class="sublink" href="${x.url}" target="_blank" rel="noopener noreferrer">[view]</a>
+        <div class="flex">
+          <div>
+            <input type="checkbox" name="documentOptions" data-idx="${i}" ${x.selected ? 'checked' : ''}>
+          </div>
+          <div>
+            ${x.title}
+            <a class="sublink" href="${x.url}" target="_blank" rel="noopener noreferrer">[view]</a>
+          </div>
+        </div>
       </label>
     `).join('')
 

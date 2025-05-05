@@ -4,6 +4,7 @@ class DetailsForm extends HTMLElement {
     this.attachShadow({ mode: 'open' })
     this.fields = new Array()
     this.details = new Object()
+    this.token = (Math.random().toFixed(3) + '').slice(2)
   }
 
   set fields(arr) {
@@ -75,25 +76,15 @@ class DetailsForm extends HTMLElement {
     return this.fields.some(x => x.id === 'full-name')
   }
 
-  connectedCallback() {
-    this.render()
+  removeToken(nameid) {
+    return nameid?.slice(0, nameid?.length - 3)
   }
 
-  render() {
-    const style = `
-      <style>
-      .loading * {
-          opacity: 0;
-          transition: opacity 1s ease;
-        }
-      </style>
-      <link rel="stylesheet" href="./WebComponents/style.css">
-    `
-
+  getFieldsHtml() {
     let lastWebpageTitle = ''
     const fieldsHtml = this.fields.map((field) => {
       let result = ''
-      const requiredIndicator = field.required ? "<i class='failureColor'>*</i>" : ""
+      const requiredIndicator = field.required ? "<i class='redColor'>*</i>" : ""
       const webpageTitle = (field.id.startsWith('-')) ? `<div class="subheader">${field.title}</div>` : ''
 
       if (webpageTitle.length > 0 && lastWebpageTitle !== webpageTitle) {
@@ -101,6 +92,7 @@ class DetailsForm extends HTMLElement {
         result += `<label class="full bottom">${webpageTitle}</label>`
       }
 
+      const nameToken = field.id + this.token
       switch (field.inputType) {
         case 'text':
           if (field.id === 'full-name') {
@@ -110,12 +102,12 @@ class DetailsForm extends HTMLElement {
                 <label>
                   First Name ${requiredIndicator}
                   <br>
-                  <input type="text" name="first-name" ${field.required ? 'required="true"' : ''} />
+                  <input type="text" name="first-name${this.token}" ${field.required ? 'required="true"' : ''} />
                 </label>
                 <label>
                   Last Name ${requiredIndicator}
                   <br>
-                  <input type="text" name="last-name" ${field.required ? 'required="true"' : ''} />
+                  <input type="text" name="last-name${this.token}" ${field.required ? 'required="true"' : ''} />
                 </label>
               `
             }
@@ -125,8 +117,8 @@ class DetailsForm extends HTMLElement {
                 ${field.label}${requiredIndicator}
                 <br>
                 <input type="text" 
-                  name="${field.id}" value="${this.details[field.id] || ''}"
-                  ${field.id === 'email' ? `pattern='${`[a-z0-9._%+\\-]+@[a-z0-9.\\-]+\\.[a-z]{2,}$`}'` : ""}
+                  name="${nameToken}" value="${this.details[field.id] || ''}"
+                  ${field.id === 'email' ? `pattern='${`[a-zA-Z0-9._%+\\-]+@[a-zA-Z0-9.\\-]+\\.[a-zA-Z]{2,}$`}'` : ""}
                   ${field.id === 'email' ? `placeholder='example@example.com'` : ""}
                   ${field.required ? 'required="true"' : ''}
                   />
@@ -139,7 +131,7 @@ class DetailsForm extends HTMLElement {
             <label class="full">
               ${field.label}${requiredIndicator}
               <br>
-              <textarea name="${field.id}" ${field.required ? 'required="true"' : ''}>
+              <textarea name="${nameToken}" ${field.required ? 'required="true"' : ''}>
                 ${this.details[field.id] || ''}
               </textarea>
             </label>
@@ -151,7 +143,7 @@ class DetailsForm extends HTMLElement {
               ${field.label}${requiredIndicator}
               <br>
               <input type="url" 
-                name="${field.id}" value="${this.details[field.id] || ''}" 
+                name="${nameToken}" value="${this.details[field.id] || ''}" 
                 pattern="${`https?://.+`}"
                 placeholder="https://"
                 ${field.required ? 'required="true"' : ''}
@@ -162,7 +154,7 @@ class DetailsForm extends HTMLElement {
         case 'checkbox':
           result += `
             <label class="full">
-              <input type="checkbox" name="${field.id}">
+              <input type="checkbox" name="${nameToken}">
               <span class="checkbox-text">${field.label}</span>
             </label>
           `
@@ -173,18 +165,18 @@ class DetailsForm extends HTMLElement {
             if (subType === 'select') {
               const options = field.inputType.map((item, ii) => `
                 <option value="${item}" ${ii === 0 ? 'selected' : ''}>${item}</option>
-              `).join('');
+              `).join('')
               result += `
                 <label for="${field.id}">
                 ${field.label}<br>
-                  <select name="${field.id}" id="${field.id}">
+                  <select name="${nameToken}" id="${field.id}">
                     ${options}
                   </select>
                 </label>`
             } else {
               const radios = field.inputType.map((item, ii) => `
               <label class='radio'>
-                <input type="radio" name="${field.id}" value="${item}" data-radio-group="${field.id}" ${ii > 0 ? '' : 'checked'} >
+                <input type="radio" name="${nameToken}" value="${item}" data-radio-group="${field.id}" ${ii > 0 ? '' : 'checked'} >
                 ${item}
               </label>
               `).join('')
@@ -201,6 +193,28 @@ class DetailsForm extends HTMLElement {
       }
       return result
     }).join('')
+    return fieldsHtml
+  }
+
+  connectedCallback() {
+    this.render()
+    // if (!window.grecaptcha) {
+    //   const script = document.createElement('script')
+    //   script.src = 'https://www.google.com/recaptcha/api.js?render=YOUR_SITE_KEY'
+    //   document.head.appendChild(script)
+    // }
+  }
+
+  render() {
+    const style = `
+      <style>
+      .loading * {
+          opacity: 0;
+          transition: opacity 1s ease;
+        }
+      </style>
+      <link rel="stylesheet" href="./WebComponents/style.min.css">
+    `
 
     this.shadowRoot.innerHTML = `
       ${style}
@@ -208,7 +222,8 @@ class DetailsForm extends HTMLElement {
       <form id="DetailsForm">
         <h3 class="header">Fill in your details:</h3>
         <div class="flex">
-          ${fieldsHtml}
+          ${this.getFieldsHtml()}
+          <input name="retype-email" type="text" class="quiet" />
         </div>
         <button id="submit-button" type="submit">Submit</button>
       </form>
@@ -217,46 +232,24 @@ class DetailsForm extends HTMLElement {
 
     this._addInputListeners()
 
-    this.shadowRoot.getElementById('DetailsForm').onsubmit = (e) => {
+    this.shadowRoot.getElementById('DetailsForm').onsubmit = async (e) => {
       e.preventDefault()
-      const testing = false
-      const testData =
-      {
-        "full-name": "A. Turing",
-        "first-name": "A.",
-        "last-name": "Turing",
-        "email": "demo@test.com",
-        "country": "Norway",
-        "country-nationality": "Canada",
-        "country-nationality2": "Canada",
-        "affiliation": "-",
-        "entity": "Individual",
-        "field": "AI Scientists",
-        "job-title": "Software Developer",
-        "noteworthy-honors": "-",
-        "-consent-existential-safety-pledge": true,
-        "-consent-international-ai-governance-petition": true,
-        "-consent-petition-wins-ban-superintelligence": "No",
-        "-consent-petition-wins-time-running": "No",
-        "-consent-petition-wins-us-must": "No",
-        "-extra-statement": "",
-        "-important-statement": "",
-        "-not-public-ban-superintelligence": false,
-        "-not-public-time-running": false,
-        "-not-public-us-must": false,
-        "-signature-url": ""
-      }
-      this.dispatchEvent(new CustomEvent('completed', { detail: testing ? testData : this.details }))
+      // const token = await window.grecaptcha.execute('YOUR_SITE_KEY', { action: 'submit' })
+      // this.details.recaptchaToken = token
+
+      this.details.email = (this.details.email || '').toLowerCase()
+
+      this.dispatchEvent(new CustomEvent('completed', { detail: this.details }))
     }
   }
 
   _addInputListeners() {
     this.shadowRoot.querySelectorAll('input[type="text"], textarea').forEach(input => {
       input.onchange = (e) => {
-        const name = e.target.getAttribute('name')
+        const name = this.removeToken(e.target.getAttribute('name'))
         if (['first-name', 'last-name'].includes(name) && this.hasFullName()) {
-          const first = this.shadowRoot.querySelector('input[name="first-name"')?.value
-          const last = this.shadowRoot.querySelector('input[name="last-name"')?.value
+          const first = this.shadowRoot.querySelector(`input[name="first-name${this.token}"`)?.value
+          const last = this.shadowRoot.querySelector(`input[name="last-name${this.token}"`)?.value
           this.details['full-name'] = first + " " + last
         }
         this.details[name] = e.target.value
@@ -265,21 +258,21 @@ class DetailsForm extends HTMLElement {
 
     this.shadowRoot.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
       checkbox.onchange = (e) => {
-        const name = e.target.getAttribute('name')
+        const name = this.removeToken(e.target.getAttribute('name'))
         this.details[name] = e.target.checked
       }
     })
 
     this.shadowRoot.querySelectorAll('select').forEach(select => {
       select.addEventListener('change', (e) => {
-        const group = e.target.getAttribute('name')
+        const group = this.removeToken(e.target.getAttribute('name'))
         this.details[group] = e.target.value
       })
     })
 
     this.shadowRoot.querySelectorAll('input[type="radio"]').forEach(radio => {
       radio.onchange = (e) => {
-        const group = e.target.getAttribute('name')
+        const group = this.removeToken(e.target.getAttribute('name'))
         this.details[group] = e.target.value
       }
     })

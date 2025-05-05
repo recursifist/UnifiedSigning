@@ -170,6 +170,7 @@ class AutoSigner extends HTMLElement {
         if (data.title) {
           const resultItem = this.results.find(x => x.title === data.title)
           if (resultItem) resultItem.value = data.message
+          this.index = this.index + 1
         }
         break
 
@@ -177,6 +178,7 @@ class AutoSigner extends HTMLElement {
         if (data.title) {
           const resultItem = this.results.find(x => x.title === data.title)
           if (resultItem) resultItem.value = data.message
+          this.index = this.index + 1
         }
         break
 
@@ -184,7 +186,7 @@ class AutoSigner extends HTMLElement {
         this.message = this.results.every(x => x === 'success')
           ? 'Signing complete!'
           : 'Complete! However some manual signing is required.'
-        this.index = this.index + 1
+        this.index = this.documents.length
 
         source.close()
         break
@@ -206,6 +208,10 @@ class AutoSigner extends HTMLElement {
     this.render()
   }
 
+  showEmailNote() {
+    this.results.some(x => !!x.value)
+  }
+
   connectedCallback() {
     this.render()
   }
@@ -218,15 +224,15 @@ class AutoSigner extends HTMLElement {
           transition: opacity 1s ease;
         }
       </style>
-      <link rel="stylesheet" href="./WebComponents/style.css">
+      <link rel="stylesheet" href="./WebComponents/style.min.css">
     `
 
     const statusIcon = (index, url) => {
       const result = this.results[index].value
       switch (result) {
         case "processing": return "<span class='status-icon'>⁃</span>"
-        case "failure": return "<span class='failureColor status-icon'>✗</span>"
-        case "success": return `<span class='successColor status-icon'>✔</span>`
+        case "failure": return "<span class='status-icon'>✗</span>"
+        case "success": return `<span class='status-icon'>✔</span>`
         default: return "<span class='status-icon'>⁃</span>"
       }
     }
@@ -258,8 +264,7 @@ class AutoSigner extends HTMLElement {
         </h3>
         <div>
             ${progressList}
-            <br>
-            <i classs="subheader">May require email verification, please check your email.</i>
+            ${this.showEmailNote() ? `<br><i class="subheader">May require email verification, please check your email.</i>` : ''}
             <div id="retryContainer" ${this.showRetry ? '' : `class="hidden"`}">
               <br>
               <button id="retryButton">Retry</button>
