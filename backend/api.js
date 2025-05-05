@@ -2,6 +2,25 @@ const config = require('./config')
 const puppeteer = require('puppeteer')
 const path = require('path')
 
+const verifyRecaptcha = async (req) => {
+  // TODO register
+  return true
+  const token = req.body.recaptchaToken
+  const secret = config.recaptchaSecret
+  try {
+    const response = await fetch(
+      `https://www.google.com/recaptcha/api/siteverify?secret=${secret}&response=${token}`,
+      { method: 'POST' }
+    )
+    const scoreData = await response.json()
+
+    return (scoreData.success && scoreData.score >= 0.5 && scoreData.action === 'submit')
+  } catch {
+    return false
+  }
+
+}
+
 const initPuppeteer = async () => {
   const browser = await puppeteer.launch({
     executablePath: config.puppeteerExecutablePath,
@@ -119,7 +138,7 @@ const processFields = async (webpage, details, page, jobId) => {
         case 'text':
         case 'textarea':
         case 'url':
-          await typeIntoElement(value, { delay: 100 + 100 * Math.random() })
+          await typeIntoElement(value, { delay: 111 + (30 * Math.random()).toFixed(0) })
           break
 
         case 'checkbox':
@@ -183,7 +202,6 @@ const processWebpage = async (sendMsg, index, webpages, webpage, page, details, 
     let submissionSuccess = false
     if (page.$(webpage.submit)) {
       submissionSuccess = true
-      await takeScreenshot("success-", webpage, page)
       await page.click(webpage.submit)
     }
 
@@ -212,9 +230,16 @@ const startSigning = async (req, jobId, jobs) => {
     })
   }
 
-  if (!Array.isArray(selected) || !selected?.length || typeof details !== 'object') {
-    sendMsg('Invalid input: selected array and details object required', 0, true)
+  const sendFailed = () => {
+    sendMsg(`Error: internal server error`, 0, true)
     job.status = 'error'
+  }
+
+  const verified = verifyRecaptcha(req)
+  const invalid = !Array.isArray(selected) || !selected?.length || typeof details !== 'object'
+  const honeyPotted = details['retype-name']
+  if(!verified || invalid || honeyPotted) {
+    sendFailed()
     return
   }
 
@@ -228,8 +253,7 @@ const startSigning = async (req, jobId, jobs) => {
   }
 
   if (webpages && !webpages.length) {
-    sendMsg('No matching webpages found', 0, true)
-    job.status = 'error'
+    sendFailed()
     return
   }
 

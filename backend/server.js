@@ -22,7 +22,7 @@ const generateJobId = () => {
 // Routes
 app.get('/', (_req, res) => res.status(200).send('API online'))
 
-app.post('/run', (req, res) => {
+app.post('/run', async (req, res) => {  
   const jobId = generateJobId()
   
   jobs[jobId] = {
