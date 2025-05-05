@@ -1,3 +1,3 @@
 export default {
-  server: 'http://localhost:3000/' // Change for prod
+  server: 'http://167.99.188.65'
 }
