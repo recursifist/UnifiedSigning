@@ -1,0 +1,14 @@
+{
+  "name": "unifiedsigning",
+  "version": "1.0.0",
+  "description": "",
+  "license": "ISC",
+  "author": "",
+  "type": "commonjs",
+  "main": "main.js",
+  "scripts": {
+    "minify:js": "minify main.js > main.min.js",
+    "minify:css": "minify ./WebComponents/style.css > ./WebComponents/style.min.css",
+    "minify": "npm run minify:js && npm run minify:css"
+  }
+}

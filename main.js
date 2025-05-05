@@ -10,7 +10,7 @@ let $selected = new Array()
 
 const createContainer = () => {
   const container = document.createElement('div')
-  container.id = 'UnifiedSigningContainer'
+  container.token = 'UnifiedSigningContainer'
 
   const root = document.getElementById("UnifiedSigningRoot")
   root.appendChild(container)
@@ -30,7 +30,7 @@ const createStep = (init, onDone) => {
 const docSelectorStep = (onDone) => {
   const init = () => {
     const docSelector = document.createElement('document-selector')
-    docSelector.documents = $webpages.map(x => ({ title: x.title, url: x.url, selected: true }))
+    docSelector.documents = $webpages.map(x => ({ title: x.title, url: x.url, selected: !true }))
     return docSelector
   }
   createStep(init, onDone)
