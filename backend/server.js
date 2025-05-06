@@ -5,7 +5,13 @@ const api = require('./api')
 const config = require('./config')
 const app = express()
 
-app.use(cors({ origin: config.corsOrigin }))
+app.use(cors({
+  origin: config.corsOrigin,
+  methods: ['GET', 'POST'],
+  credentials: true,
+  allowedHeaders: ['Content-Type', 'Authorization', 'Cache-Control'],
+  exposedHeaders: ['Content-Type', 'Connection', 'Cache-Control']
+}))
 app.use(express.json())
 
 // In-memory job storage
@@ -22,35 +28,35 @@ const generateJobId = () => {
 // Routes
 app.get('/', (_req, res) => res.status(200).send('API online'))
 
-app.post('/run', async (req, res) => {  
+app.post('/run', async (req, res) => {
   const jobId = generateJobId()
-  
+
   jobs[jobId] = {
     status: 'pending',
     messages: [],
     queue: [],
     startedAt: new Date(),
   }
-  
+
   Promise.resolve().then(async () => {
     try {
       await api.startSigning(req, jobId, jobs)
     } catch (error) {
-      const errorMsg = { 
-        message: `Unhandled error: ${error.message}`, 
-        progress: 0, 
-        error: true 
+      const errorMsg = {
+        message: `Unhandled error: ${error.message}`,
+        progress: 0,
+        error: true
       }
-      
+
       jobs[jobId].messages.push(errorMsg)
       jobs[jobId].status = 'error'
-      
+
       jobs[jobId].queue.forEach(client => {
         client.write(`data: ${JSON.stringify(errorMsg)}\n\n`)
       })
     }
   })
-  
+
   res.json({ jobId })
 })
 

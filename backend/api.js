@@ -291,20 +291,26 @@ const startSigning = async (req, jobId, jobs) => {
   }
 }
 
+const setSEEHeader = (res) => {
+  res.writeHead(200, {
+    'Content-Type': 'text/event-stream',
+    'Cache-Control': 'no-cache',
+    'Connection': 'keep-alive',
+    'Access-Control-Allow-Origin': config.corsOrigin,
+    'Access-Control-Allow-Credentials': 'true'
+  })
+  res.write('\n')
+}
+
 const getSSE = (req, res, jobId, jobs) => {
+  setSEEHeader(res)
+
   const job = jobs[jobId]
   if (!job) {
-    res.setHeader('Content-Type', 'text/event-stream')
-    res.setHeader('Cache-Control', 'no-cache')
-    res.setHeader('Connection', 'keep-alive')
     res.write(`data: ${JSON.stringify({ message: 'Job not found', error: true })}\n\n`)
     res.end()
     return
   }
-
-  res.setHeader('Content-Type', 'text/event-stream')
-  res.setHeader('Cache-Control', 'no-cache')
-  res.setHeader('Connection', 'keep-alive')
 
   job.messages.forEach((msg) => {
     res.write(`data: ${JSON.stringify(msg)}\n\n`)
