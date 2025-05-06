@@ -1,6 +1,7 @@
 const config = require('./config')
 const puppeteer = require('puppeteer')
 const path = require('path')
+const logger = require('./logger')
 
 const verifyRecaptcha = async (req) => {
   // TODO register
@@ -42,12 +43,6 @@ const initPuppeteer = async () => {
 }
 
 const waitFor = async (ms = 503 * Math.random() + 1001) => await new Promise((resolve) => setTimeout(resolve, ms))
-
-const takeScreenshot = async (jobId, webpage, page) => {
-  const dir = path.join(__dirname, 'error')
-  const fName = `${jobId}-${webpage.title.replace(/\s+/g, '_')}.png`
-  await page.screenshot({ path: path.join(dir, fName) })
-}
 
 const performActions = async (page, actions) => {
   for (const action of actions) {
@@ -207,12 +202,11 @@ const processWebpage = async (sendMsg, index, webpages, webpage, page, details, 
 
     if (submissionSuccess) {
       sendMsg('success', ((index + 1) / webpages?.length) * 100, false, webpage.title)
-
     } else {
-      await takeScreenshot("failed-", webpage, page)
       throw new Error('Submission failed')
     }
   } catch (error) {
+    logger.info(`Webpage signing failure: ${error.message}`)
     sendMsg('failure', ((index + 1) / webpages?.length) * 100, false, webpage.title)
     sendMsg(`failure: ${error.message}`, ((index + 1) / webpages?.length) * 100, true, webpage.title)
   }
@@ -238,7 +232,8 @@ const startSigning = async (req, jobId, jobs) => {
   const verified = verifyRecaptcha(req)
   const invalid = !Array.isArray(selected) || !selected?.length || typeof details !== 'object'
   const honeyPotted = details['retype-name']
-  if(!verified || invalid || honeyPotted) {
+  if (!verified || invalid || honeyPotted) {
+    logger.error(`Failed - !verified: ${!verified}, invalid: ${invalid}, honeyPotted: ${honeyPotted}`)
     sendFailed()
     return
   }
@@ -249,7 +244,7 @@ const startSigning = async (req, jobId, jobs) => {
     const jsonData = await response.json()
     webpages = jsonData.webpages.filter((x) => selected.includes(x.title))
   } catch (error) {
-    console.error('Error fetching or processing JSON data file:', error)
+    logger.error('Error fetching or processing JSON data file.')
   }
 
   if (webpages && !webpages.length) {
@@ -257,10 +252,12 @@ const startSigning = async (req, jobId, jobs) => {
     return
   }
 
-  job.status = 'processing'
-  const { browser, page } = await initPuppeteer()
-
+  let browserInstance
   try {
+    job.status = 'processing'
+    const { browser, page } = await initPuppeteer()
+    browserInstance = browser
+
     for (const [index, webpage] of webpages.entries()) {
       sendMsg('processing', (index / webpages?.length) * 100, false, webpage.title)
 
@@ -284,10 +281,11 @@ const startSigning = async (req, jobId, jobs) => {
     sendMsg('complete', 100, false, 'Signing is complete')
     job.status = 'completed'
   } catch (error) {
+    logger.error(`Run error: ${error.message}`)
     sendMsg(`Error: ${error.message}`, 0, true)
     job.status = 'error'
   } finally {
-    await browser.close()
+    await browserInstance.close()
   }
 }
 
@@ -303,27 +301,33 @@ const setSEEHeader = (res) => {
 }
 
 const getSSE = (req, res, jobId, jobs) => {
-  setSEEHeader(res)
+  try {
+    setSEEHeader(res)
 
-  const job = jobs[jobId]
-  if (!job) {
-    res.write(`data: ${JSON.stringify({ message: 'Job not found', error: true })}\n\n`)
-    res.end()
-    return
-  }
-
-  job.messages.forEach((msg) => {
-    res.write(`data: ${JSON.stringify(msg)}\n\n`)
-  })
-
-  job.queue.push(res)
-
-  req.on('close', () => {
-    job.queue = job.queue.filter((client) => client !== res)
-    if (job.status === 'completed' || job.status === 'error') {
-      setTimeout(() => delete jobs[jobId], config.jobTimeoutMins * 60 * 1000)
+    const job = jobs[jobId]
+    if (!job) {
+      logger.error('Job not found')
+      res.write(`data: ${JSON.stringify({ message: 'Job not found', error: true })}\n\n`)
+      res.end()
+      return
     }
-  })
+
+    job.messages.forEach((msg) => {
+      res.write(`data: ${JSON.stringify(msg)}\n\n`)
+    })
+
+    job.queue.push(res)
+
+    req.on('close', () => {
+      job.queue = job.queue.filter((client) => client !== res)
+      if (job.status === 'completed' || job.status === 'error') {
+        logger.info('Run: ' + job.status)
+        setTimeout(() => delete jobs[jobId], config.jobTimeoutMins * 60 * 1000)
+      }
+    })
+  } catch (error) {
+    logger.error('SSE error: ' + error.message)
+  }
 }
 
 module.exports = { startSigning, getSSE }
