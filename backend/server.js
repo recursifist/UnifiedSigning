@@ -1,17 +1,24 @@
 const express = require('express')
 const cors = require('cors')
 const crypto = require('crypto')
-const api = require('./api')
 const config = require('./config')
+const api = require('./api')
 const app = express()
+const logger = require('./logger')
 
 app.use(cors({
   origin: config.corsOrigin,
   methods: ['GET', 'POST', 'OPTIONS'],
-  credentials: true,
   allowedHeaders: ['Content-Type', 'Authorization', 'Cache-Control'],
   exposedHeaders: ['Content-Type', 'Connection', 'Cache-Control']
 }))
+
+app.options('*all', cors({
+  origin: config.corsOrigin,
+  methods: ['GET', 'POST', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'Cache-Control']
+}))
+
 app.use(express.json())
 
 // In-memory job storage
@@ -66,3 +73,18 @@ app.get('/run/:jobId', (req, res) => {
 })
 
 app.listen(config.port, () => console.log('Ready on port ' + config.port))
+
+app.use((err, req, res, next) => {
+  logger.error(`Error [${req.method}]: ${err.message}`)
+  res.status(500).json({ error: 'Server error', message: err.message })
+})
+
+process.on('SIGTERM', () => {
+  logger.info('SIGTERM received, shutting down gracefully')
+  process.exit(0)
+})
+
+process.on('uncaughtException', (error) => {
+  logger.error(`Uncaught exception: ${error.message}`)
+  process.exit(1)
+})

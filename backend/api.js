@@ -1,6 +1,5 @@
 const config = require('./config')
 const puppeteer = require('puppeteer')
-const path = require('path')
 const logger = require('./logger')
 
 const verifyRecaptcha = async (req) => {
@@ -203,10 +202,10 @@ const processWebpage = async (sendMsg, index, webpages, webpage, page, details, 
     if (submissionSuccess) {
       sendMsg('success', ((index + 1) / webpages?.length) * 100, false, webpage.title)
     } else {
-      throw new Error('Submission failed')
+      throw new Error('Submission not successful')
     }
   } catch (error) {
-    logger.info(`Webpage signing failure: ${error.message}`)
+    logger.info(`Webpage signing failure: [${webpage.title}] ${error.message}`)
     sendMsg('failure', ((index + 1) / webpages?.length) * 100, false, webpage.title)
     sendMsg(`failure: ${error.message}`, ((index + 1) / webpages?.length) * 100, true, webpage.title)
   }
@@ -225,8 +224,8 @@ const startSigning = async (req, jobId, jobs) => {
   }
 
   const sendFailed = () => {
-    sendMsg(`Error: internal server error`, 0, true)
     job.status = 'error'
+    sendMsg(`Error: internal server error`, 0, true)
   }
 
   const verified = verifyRecaptcha(req)
@@ -252,11 +251,9 @@ const startSigning = async (req, jobId, jobs) => {
     return
   }
 
-  let browserInstance
+  job.status = 'processing'
+  const { browser, page } = await initPuppeteer()
   try {
-    job.status = 'processing'
-    const { browser, page } = await initPuppeteer()
-    browserInstance = browser
 
     for (const [index, webpage] of webpages.entries()) {
       sendMsg('processing', (index / webpages?.length) * 100, false, webpage.title)
@@ -270,22 +267,23 @@ const startSigning = async (req, jobId, jobs) => {
         processWebpage(sendMsg, index, webpages, webpage, page, details, jobId),
         new Promise((resolve) => setTimeout(() => {
           resolve('timed-out')
-        }, 2 * 60 * 1000))
+        }, 5 * 60 * 1000))
       ])
       if (webpageTimeout === 'timed-out') {
+        logger.error(`Webpage timed-out - ${webpage.title}`)
         sendMsg('failure', ((index + 1) / webpages?.length) * 100, false, webpage.title)
         continue
       }
     }
 
-    sendMsg('complete', 100, false, 'Signing is complete')
     job.status = 'completed'
+    sendMsg('complete', 100, false, 'Signing is complete')
   } catch (error) {
     logger.error(`Run error: ${error.message}`)
-    sendMsg(`Error: ${error.message}`, 0, true)
     job.status = 'error'
+    sendMsg(`Error: ${error.message}`, 0, true)
   } finally {
-    await browserInstance.close()
+    await browser.close()
   }
 }
 
@@ -294,10 +292,9 @@ const setSEEHeader = (res) => {
     'Content-Type': 'text/event-stream',
     'Cache-Control': 'no-cache',
     'Connection': 'keep-alive',
-    'Access-Control-Allow-Origin': config.corsOrigin,
-    'Access-Control-Allow-Credentials': 'true'
+    'X-Accel-Buffering': 'no',
+    'Access-Control-Allow-Origin': config.corsOrigin
   })
-  res.write('\n')
 }
 
 const getSSE = (req, res, jobId, jobs) => {
@@ -316,9 +313,14 @@ const getSSE = (req, res, jobId, jobs) => {
       res.write(`data: ${JSON.stringify(msg)}\n\n`)
     })
 
+    const keepAlive = setInterval(() => {
+      res.write(': keep-alive\n\n')
+    }, 30000)
+
     job.queue.push(res)
 
     req.on('close', () => {
+      clearInterval(keepAlive)
       job.queue = job.queue.filter((client) => client !== res)
       if (job.status === 'completed' || job.status === 'error') {
         logger.info('Run: ' + job.status)
