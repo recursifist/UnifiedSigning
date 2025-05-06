@@ -99,7 +99,7 @@ class AutoSigner extends HTMLElement {
       if (!jobId) throw new Error('[UnifiedSigner] No job ID received from server')
 
       const sseUrl = `${apiUrl}/${jobId}`
-      const source = new EventSource(sseUrl)
+      const source = new EventSource(sseUrl, { withCredentials: true })
       let attempts = 0
       const maxAttempts = 3
 
