@@ -194,7 +194,7 @@ class AutoSigner extends HTMLElement {
       default:
         if (data.error) {
           this.message = 'Failed. Please try again.'
-          this.showRetry()
+          this.showRetry = true
 
           if (data.title) {
             console.error(`[${data.title}] ${data.message}`)
