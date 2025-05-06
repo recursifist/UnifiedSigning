@@ -149,7 +149,7 @@ class AutoSigner extends HTMLElement {
   }
 
   resetUIState() {
-    this.message = 'Starting...'
+    this.message = `Starting. It may take a few minutes - don't close this window.`
     this.showRetry = false
     this.index = 0
     this.results = this.documents.map(title => ({ title, value: undefined }))
@@ -208,7 +208,7 @@ class AutoSigner extends HTMLElement {
   }
 
   showEmailNote() {
-    this.results.some(x => !!x.value)
+    this.results.some(x => x.value)
   }
 
   connectedCallback() {
@@ -274,8 +274,12 @@ class AutoSigner extends HTMLElement {
 
     this.shadowRoot.getElementById('retryButton').addEventListener('click', (e) => {
       e.target.disabled = true
+      const documentsToRetry = this.results
+        .filter(x => (typeof x.value) === "undefined" || ["processing", "failure"].includes(x.value))
+        .map(x.title)
       setTimeout(() => {
-        this.dispatchEvent(new CustomEvent('retry'))
+        this.showRetry = false
+        this.dispatchEvent(new CustomEvent('retry', documentsToRetry))
       }, 1500)
     })
 
