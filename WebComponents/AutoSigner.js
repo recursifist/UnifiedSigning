@@ -12,6 +12,7 @@ class AutoSigner extends HTMLElement {
     this._results = []
     this._message = ''
     this._showRetry = false
+    this._loading = true
   }
 
   set webpages(arr) {
@@ -76,6 +77,14 @@ class AutoSigner extends HTMLElement {
     return this._showRetry
   }
 
+  set loading(val) {
+    this._loading = val
+    this.render()
+  }
+  get loading() {
+    return this._loading
+  }
+
   async run() {
     try {
       this.resetUIState()
@@ -118,6 +127,7 @@ class AutoSigner extends HTMLElement {
         if (attempts >= maxAttempts) {
           this.message = 'Failed - connection error. Please try again.'
           this.showRetry = true
+          this.loading = false
 
           source.close()
           this._currentEventSource = null
@@ -131,6 +141,7 @@ class AutoSigner extends HTMLElement {
           if (source.readyState === EventSource.CONNECTING) {
             this.message = 'Failed - connection error. Please try again.'
             this.showRetry = true
+            this.loading = false
 
             source.close()
           }
@@ -143,14 +154,16 @@ class AutoSigner extends HTMLElement {
     } catch (error) {
       this.message = 'Failed - server error. Please try again.'
       this.showRetry = true
+      this.loading = false
       console.error('[UnifiedSigner] Error running job:', error)
     }
 
   }
 
   resetUIState() {
-    this.message = `Starting. It may take a few minutes - don't close this window.`
+    this.message = `Starting, this may take a few minutes - don't close this window.`
     this.showRetry = false
+    this.loading = true
     this.index = 0
     this.results = this.documents.map(title => ({ title, value: undefined }))
   }
@@ -182,6 +195,7 @@ class AutoSigner extends HTMLElement {
         break
 
       case "complete":
+        this.loading = false
         this.message = this.results.every(x => x === 'success')
           ? 'Signing complete!'
           : 'Complete! However some manual signing is required.'
@@ -194,6 +208,7 @@ class AutoSigner extends HTMLElement {
         if (data.error) {
           this.message = 'Failed. Please try again.'
           this.showRetry = true
+          this.loading = false
 
           if (data.title) {
             console.error(`[${data.title}] ${data.message}`)
@@ -208,7 +223,7 @@ class AutoSigner extends HTMLElement {
   }
 
   showEmailNote() {
-    this.results.some(x => x.value)
+    this.results.some(x => x.value === "success")
   }
 
   connectedCallback() {
@@ -246,11 +261,11 @@ class AutoSigner extends HTMLElement {
 
     const progressList =
       "<ul>" +
-      this.webpages.map((x, i) => {
+      this.webpages.map((w, i) => {
         return `<li>
             ${statusIcon(i)}
-            ${x.title}
-            ${statusMessage(i, x.url)}
+            ${w.title}
+            ${statusMessage(i, w.url)}
           </li>`
       }).join('') +
       "</ul>"
@@ -258,14 +273,14 @@ class AutoSigner extends HTMLElement {
     this.shadowRoot.innerHTML = style +
       `<div class="container loading">
         <h3 class="header">
+          (${Math.min(this.index, this.documents?.length)}/${this.documents?.length})
           ${this.message}
-          <span class="normal-text">(${Math.min(this.index, this.documents?.length)}/${this.documents?.length})</span>
+          ${this.loading ? `<div class="loader"></div>` : ''}
         </h3>
         <div>
             ${progressList}
-            ${this.showEmailNote() ? `<br><i class="subheader">May require email verification, please check your email.</i>` : ''}
+            ${this.showEmailNote() ? `<br><i class="subheader">May require email verification, please check your email.</i><br>` : ''}
             <div id="retryContainer" ${this.showRetry ? '' : `class="hidden"`}">
-              <br>
               <button id="retryButton">Retry</button>
             <div>
         </div>
@@ -276,9 +291,8 @@ class AutoSigner extends HTMLElement {
       e.target.disabled = true
       const documentsToRetry = this.results
         .filter(x => (typeof x.value) === "undefined" || ["processing", "failure"].includes(x.value))
-        .map(x.title)
+        .map(x => x.title)
       setTimeout(() => {
-        this.showRetry = false
         this.dispatchEvent(new CustomEvent('retry', documentsToRetry))
       }, 1500)
     })

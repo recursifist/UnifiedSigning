@@ -400,6 +400,25 @@ a.sublink {
   color: firebrick;
 }
 
+.loader {
+  display: inline-block;
+  width: 9px;
+  padding: 4px;
+  margin-bottom: -2px;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: var(--primary);
+  --_m: 
+    conic-gradient(#0000 10%,#000),
+    linear-gradient(#000 0 0) content-box;
+  -webkit-mask: var(--_m);
+          mask: var(--_m);
+  -webkit-mask-composite: source-out;
+          mask-composite: subtract;
+  animation: loaderAnimation 1s infinite linear;
+}
+@keyframes loaderAnimation {to{transform: rotate(1turn)}}
+
 .status-icon {
   width: 6px;
   display: inline-block;
@@ -435,6 +454,11 @@ a.sublink {
 
   .header {
     font-size: 16px;
+    animation: fadeIn 0.5s;
+  }
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to   { opacity: 1; }
   }
 
   .subheader {
