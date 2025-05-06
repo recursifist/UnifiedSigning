@@ -218,7 +218,7 @@ class DetailsForm extends HTMLElement {
 
     this.shadowRoot.innerHTML = `
       ${style}
-      <div class="container">
+      <div class="container loading">
       <form id="DetailsForm">
         <h3 class="header">Fill in your details:</h3>
         <div class="flex">

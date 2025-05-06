@@ -163,6 +163,7 @@ class AutoSigner extends HTMLElement {
           this.message = `Signing: ${data.title}`
           const resultItem = this.results.find(x => x.title === data.title)
           if (resultItem) resultItem.value = data.message
+          this.index = this.index + 1
         }
         break
 
@@ -170,7 +171,6 @@ class AutoSigner extends HTMLElement {
         if (data.title) {
           const resultItem = this.results.find(x => x.title === data.title)
           if (resultItem) resultItem.value = data.message
-          this.index = this.index + 1
         }
         break
 
@@ -178,7 +178,6 @@ class AutoSigner extends HTMLElement {
         if (data.title) {
           const resultItem = this.results.find(x => x.title === data.title)
           if (resultItem) resultItem.value = data.message
-          this.index = this.index + 1
         }
         break
 
@@ -257,7 +256,7 @@ class AutoSigner extends HTMLElement {
       "</ul>"
 
     this.shadowRoot.innerHTML = style +
-      `<div class="container">
+      `<div class="container loading">
         <h3 class="header">
           ${this.message}
           <span class="normal-text">(${Math.min(this.index, this.documents?.length)}/${this.documents?.length})</span>
