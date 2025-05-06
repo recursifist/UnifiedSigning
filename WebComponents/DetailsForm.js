@@ -223,9 +223,9 @@ class DetailsForm extends HTMLElement {
         <h3 class="header">Fill in your details:</h3>
         <div class="flex">
           ${this.getFieldsHtml()}
-          <input name="retype-email" type="text" class="quiet" />
         </div>
         <button id="submit-button" type="submit">Submit</button>
+        <input name="retype-email" type="text" class="quiet" />
       </form>
       </div>
     `

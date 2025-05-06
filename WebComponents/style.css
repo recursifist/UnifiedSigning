@@ -363,14 +363,6 @@ a.sublink {
   font-size: 14px;
 }
 
-.status-icon {
-  display: inline-block;
-  width: 1rem;
-  align-content: center;
-  text-align: center;
-  vertical-align: middle;
-}
-
 .header {
   font-size: 19px;
   margin-top: 0;
@@ -406,6 +398,37 @@ a.sublink {
 
 .redColor {
   color: firebrick;
+}
+
+.status-icon {
+  width: 6px;
+  display: inline-block;
+  align-content: center;
+  text-align: center;
+  vertical-align: middle;
+  margin-left: 2px;
+  margin-right: 9px;
+}
+
+.bullet {
+  aspect-ratio: 1;
+  margin-left: 6px;
+  margin-right: 4px;
+  border-radius: 50%;
+  background: #000;
+}
+
+.bulletLoading {
+  aspect-ratio: 1;
+  margin-left: 6px;
+  margin-right: 4px;
+  border-radius: 50%;
+  background: #000;
+  box-shadow: 0 0 0 0 #0006;
+  animation: bulletLoadingAnimation 1s infinite;
+}
+@keyframes bulletLoadingAnimation {
+    100% {box-shadow: 0 0 0 6px #0000}
 }
 
 @media (max-width: 600px) {

@@ -229,10 +229,10 @@ class AutoSigner extends HTMLElement {
     const statusIcon = (index, url) => {
       const result = this.results[index].value
       switch (result) {
-        case "processing": return "<span class='status-icon'>⁃</span>"
+        case "processing": return "<span class='status-icon bulletLoading'></span>"
         case "failure": return "<span class='status-icon'>✗</span>"
         case "success": return `<span class='status-icon'>✔</span>`
-        default: return "<span class='status-icon'>⁃</span>"
+        default: return "<span class='status-icon bullet'></span>"
       }
     }
     const statusMessage = (index, url) => {
