@@ -70,12 +70,16 @@ const autoSignerStep = () => {
       const autoSigner = document.createElement('auto-signer')
       autoSigner.webpages = $webpages
         .filter(w => $selected.includes(w.title))
-        .map(w => ({ title: w.title, url: w.url}))
+        .map(w => ({ title: w.title, url: w.url }))
       autoSigner.documents = $selected
       autoSigner.details = details
       autoSigner.entity = $entityName
       autoSigner.run()
-      autoSigner.addEventListener('retry', () => autoSigner.run())
+      autoSigner.addEventListener('retry', (documentsToRetry) => {
+        // Retry unsuccessful documents
+        autoSigner.documents = autoSigner.documents.filter(x => documentsToRetry.includes(x.title))
+        autoSigner.run()
+      })
       return autoSigner
     }
     createStep(init, () => { })
