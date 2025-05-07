@@ -28,6 +28,7 @@ const initPuppeteer = async () => {
     headless: true,
   })
   const page = await browser.newPage()
+  page.setDefaultNavigationTimeout(2 * 60 * 1000)
   await page.setViewport({
     width: 1280,
     height: 1280,
@@ -41,148 +42,171 @@ const initPuppeteer = async () => {
   return { browser, page }
 }
 
-const waitFor = async (ms = 503 * Math.random() + 1001) => await new Promise((resolve) => setTimeout(resolve, ms))
+const waitDelay = async (ms = 503 * Math.random() + 2001) => await new Promise((resolve) => setTimeout(resolve, ms))
+
+const fetchWebpagesData = async (entity, selected) => {
+  let webpages
+  try {
+    const response = await fetch(`${config.dataUrl}${entity}.json`)
+    const jsonData = await response.json()
+    webpages = jsonData.webpages.filter((x) => selected.includes(x.title))
+  } catch (error) {
+    logger.error('Error fetching or processing JSON data file.')
+  }
+  return webpages
+}
 
 const performActions = async (page, actions) => {
-  for (const action of actions) {
-    const [selector, actionType] = Object.entries(action)[0]
-    switch (actionType) {
-      case 'scrollTo':
-        await page.evaluate((sel) => {
-          document.querySelector(sel)?.scrollIntoView({ behavior: 'smooth' })
-        }, selector)
-        break
-      case 'click':
-        await page.click(selector)
-        break
-      case 'iframe':
-      // TODO Handle iframe forms
-      // const iframeHandle = await page.$(selector)
-      // const frame = await iframeHandle.contentFrame()
-      default:
-        throw new Error(`Unsupported action: ${actionType}`)
+  try {
+    for (const action of actions) {
+      const [selector, actionType] = Object.entries(action)[0]
+      switch (actionType) {
+        case 'scrollTo':
+          await page.evaluate((sel) => {
+            document.querySelector(sel)?.scrollIntoView({ behavior: 'smooth' })
+          }, selector)
+          break
+        case 'click':
+          await page.click(selector)
+          break
+        case 'iframe':
+        // TODO Handle iframe forms
+        // const iframeHandle = await page.$(selector)
+        // const frame = await iframeHandle.contentFrame()
+        default:
+          throw new Error(`Unsupported action: ${actionType}`)
+      }
+      await waitDelay()
     }
-    await waitFor()
+  } catch (error) {
+    error.message = '[performActions] ' + error.message
+    throw error
   }
 }
 
 const processFields = async (webpage, details, page, jobId) => {
-  for (const field of webpage.fields) {
-    const key = field.id
-    const value = details[key]
+  try {
+    for (const field of webpage.fields) {
+      const key = field.id
+      const value = details[key]
 
-    if (value !== undefined) {
-      const { querySelector, querySelectorAllIndex, inputType } = field
+      if (value !== undefined) {
+        const { querySelector, querySelectorAllIndex, inputType } = field
 
-      const selectElement = async () => {
-        if (querySelectorAllIndex !== undefined) {
-          return await page.evaluateHandle((selector, index) => {
-            const elements = document.querySelectorAll(selector)
-            if (index >= elements.length) throw new Error(`Index ${index} out of bounds for selector "${selector}" ${elements?.length}`)
-            return elements[index]
-          }, querySelector, querySelectorAllIndex)
-        } else {
-          return await page.$(querySelector)
-        }
-      }
-
-      const clickElement = async () => {
-        if (querySelectorAllIndex !== undefined) {
-          await page.evaluate((selector, index) => {
-            document.querySelectorAll(selector)[index].click()
-          }, querySelector, querySelectorAllIndex)
-        } else {
-          await page.click(querySelector)
-        }
-      }
-
-      const typeIntoElement = async (text, options = {}) => {
-        if (querySelectorAllIndex !== undefined) {
-          const element = await selectElement()
-          await element.type(text, options)
-        } else {
-          await page.type(querySelector, text, options)
-        }
-      }
-
-      const isElementChecked = async () => {
-        if (querySelectorAllIndex !== undefined) {
-          return await page.evaluate((selector, index) => {
-            return document.querySelectorAll(selector)[index].checked
-          }, querySelector, querySelectorAllIndex)
-        } else {
-          return await page.$eval(querySelector, el => el.checked)
-        }
-      }
-
-      const selectOption = async (value) => {
-        if (querySelectorAllIndex !== undefined) {
-          await page.evaluate((selector, index, val) => {
-            const select = document.querySelectorAll(selector)[index]
-            select.value = val
-            const event = new Event('change', { bubbles: true })
-            select.dispatchEvent(event)
-          }, querySelector, querySelectorAllIndex, value)
-        } else {
-          await page.select(querySelector, value)
-        }
-      }
-
-      switch (inputType) {
-        case 'text':
-        case 'textarea':
-        case 'url':
-          await typeIntoElement(value, { delay: 111 + (30 * Math.random()).toFixed(0) })
-          break
-
-        case 'checkbox':
-          const isChecked = await isElementChecked()
-          if ((value === true || value === 'true') && !isChecked) {
-            await clickElement()
-          } else if (!(value === true || value === 'true') && isChecked) {
-            await clickElement()
-          }
-          break
-
-        default: // Radio or Select (dropdown) input
-          if (querySelector.includes('select')) {
-            const option = inputType.find((opt) => opt === value)
-            if (!option) throw new Error(`Invalid option for ${key}: ${value}`)
-            await selectOption(value)
+        const selectElement = async () => {
+          if (querySelectorAllIndex !== undefined) {
+            return await page.evaluateHandle((selector, index) => {
+              const elements = document.querySelectorAll(selector)
+              if (index >= elements.length) throw new Error(`Index ${index} out of bounds for selector "${selector}" ${elements?.length}`)
+              return elements[index]
+            }, querySelector, querySelectorAllIndex)
           } else {
-            const radioValue = value === 'Yes' ? "true" : value === 'No' ? "false" : value
-            if (querySelectorAllIndex !== undefined) {
-              await page.evaluate((selector, index) => {
-                const radioButtons = document.querySelectorAll(selector)
-                if (index < radioButtons.length) {
-                  let radioButton = radioButtons[index]
-                  let i = 0
-                  while (radioButton.value !== radioValue && index < radioButtons.length) { radioButton = radioButtons[index + ++i] }
-                  radioButton.click()
-                } else {
-                  throw new Error(`Index ${index} out of bounds for radio selector "${selector}"`)
-                }
-              }, querySelector, querySelectorAllIndex)
-            } else {
-              const radioSelector = `${querySelector}[value="${radioValue}"]`
-              await page.click(radioSelector)
-            }
+            return await page.$(querySelector)
           }
-          break
-      }
+        }
 
-      // Perform subActions
-      if (field.subActions && Array.isArray(field.subActions) && field.subActions.length) {
-        await performActions(page, field.subActions)
+        const clickElement = async () => {
+          if (querySelectorAllIndex !== undefined) {
+            await page.evaluate((selector, index) => {
+              document.querySelectorAll(selector)[index].click()
+            }, querySelector, querySelectorAllIndex)
+          } else {
+            await page.click(querySelector)
+          }
+        }
+
+        const typeIntoElement = async (text, options = {}) => {
+          if (querySelectorAllIndex !== undefined) {
+            const element = await selectElement()
+            await element.type(text, options)
+          } else {
+            await page.type(querySelector, text, options)
+          }
+        }
+
+        const isElementChecked = async () => {
+          if (querySelectorAllIndex !== undefined) {
+            return await page.evaluate((selector, index) => {
+              return document.querySelectorAll(selector)[index].checked
+            }, querySelector, querySelectorAllIndex)
+          } else {
+            return await page.$eval(querySelector, el => el.checked)
+          }
+        }
+
+        const selectOption = async (value) => {
+          if (querySelectorAllIndex !== undefined) {
+            await page.evaluate((selector, index, val) => {
+              const select = document.querySelectorAll(selector)[index]
+              select.value = val
+              const event = new Event('change', { bubbles: true })
+              select.dispatchEvent(event)
+            }, querySelector, querySelectorAllIndex, value)
+          } else {
+            await page.select(querySelector, value)
+          }
+        }
+
+        switch (inputType) {
+          case 'text':
+          case 'textarea':
+          case 'url':
+            await typeIntoElement(value, { delay: 101 + (10 * Math.random()).toFixed(0) })
+            break
+
+          case 'checkbox':
+            const isChecked = await isElementChecked()
+            if ((value === true || value === 'true') && !isChecked) {
+              await clickElement()
+            } else if (!(value === true || value === 'true') && isChecked) {
+              await clickElement()
+            }
+            break
+
+          default: // Radio or Select (dropdown) input
+            if (querySelector.includes('select')) {
+              const option = inputType.find((opt) => opt === value)
+              if (!option) throw new Error(`Invalid option for ${key}: ${value}`)
+              await selectOption(value)
+            } else {
+              const radioValue = value === 'Yes' ? "true" : value === 'No' ? "false" : value
+              if (querySelectorAllIndex !== undefined) {
+                await page.evaluate((selector, index) => {
+                  const radioButtons = document.querySelectorAll(selector)
+                  if (index < radioButtons.length) {
+                    let radioButton = radioButtons[index]
+                    let i = 0
+                    while (radioButton.value !== radioValue && index < radioButtons.length) { radioButton = radioButtons[index + ++i] }
+                    radioButton.click()
+                  } else {
+                    throw new Error(`Index ${index} out of bounds for radio selector "${selector}"`)
+                  }
+                }, querySelector, querySelectorAllIndex)
+              } else {
+                const radioSelector = `${querySelector}[value="${radioValue}"]`
+                await page.click(radioSelector)
+              }
+            }
+            break
+        }
+
+        // Perform subActions
+        if (field.subActions && Array.isArray(field.subActions) && field.subActions.length) {
+          await performActions(page, field.subActions)
+        }
       }
     }
+
+  } catch (error) {
+    error.message = '[processFields] ' + error.message
+    throw error
   }
 }
 
 const processWebpage = async (sendMsg, index, webpages, webpage, page, details, jobId) => {
   try {
-    await page.goto(webpage.url, { waitUntil: 'networkidle0' })
-    await waitFor()
+    await page.goto(webpage.url)
+    await waitDelay(20 * 1000)
 
     // Perform actions
     if (webpage.actions && Array.isArray(webpage.actions)) {
@@ -205,7 +229,7 @@ const processWebpage = async (sendMsg, index, webpages, webpage, page, details, 
       throw new Error('Submission not successful')
     }
   } catch (error) {
-    logger.info(`Webpage signing failure: [${webpage.title}] ${error.message}`)
+    logger.info(`processWebpage failure: [${webpage.title}] ${error.message}`)
     sendMsg('failure', ((index + 1) / webpages?.length) * 100, false, webpage.title)
     sendMsg(`failure: ${error.message}`, ((index + 1) / webpages?.length) * 100, true, webpage.title)
   }
@@ -237,15 +261,7 @@ const startSigning = async (req, jobId, jobs) => {
     return
   }
 
-  let webpages
-  try {
-    const response = await fetch(`${config.dataUrl}${entity}.json`)
-    const jsonData = await response.json()
-    webpages = jsonData.webpages.filter((x) => selected.includes(x.title))
-  } catch (error) {
-    logger.error('Error fetching or processing JSON data file.')
-  }
-
+  let webpages = await fetchWebpagesData(entity, selected)
   if (webpages && !webpages.length) {
     sendFailed()
     return
@@ -254,7 +270,6 @@ const startSigning = async (req, jobId, jobs) => {
   job.status = 'processing'
   const { browser, page } = await initPuppeteer()
   try {
-
     for (const [index, webpage] of webpages.entries()) {
       sendMsg('processing', (index / webpages?.length) * 100, false, webpage.title)
 
@@ -283,6 +298,7 @@ const startSigning = async (req, jobId, jobs) => {
     job.status = 'error'
     sendMsg(`Error: ${error.message}`, 0, true)
   } finally {
+    await waitDelay(5000)
     await browser.close()
   }
 }
