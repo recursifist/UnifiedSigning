@@ -4,6 +4,7 @@
     {
       "title": "Existential Safety Pledge",
       "url": "https://existentialsafetypledge.org/",
+      "description": "I will not intentionally contribute to any effort that I believe has a net risk of 0.1% or higher of causing humanity's extinction.",
       "auto": "submit",
       "actions": [
         {
@@ -38,6 +39,7 @@
     {
       "title": "International AI Governance Petition",
       "url": "https://aigovernancepetition.org/",
+      "description": "Establishing an independent multilateral governance body to mitigate geopolitical, socioeconomic, and existential risks from powerful artificial intelligence should be an urgent global priority.",
       "auto": "submit",
       "actions": [
         {
@@ -86,6 +88,7 @@
     {
       "title": "International AI Governance Alliance Petition",
       "url": "https://www.iaiga.org/",
+      "description": "Advocates for the creation of a supranational organization dedicated to mitigating existential risks posed by AI and ensuring the fair distribution of AI-generated economic benefits.\nIAIGA proposes three core functions:\n(1) developing a Global AI Safety Treaty to regulate and align AI development with human values;\n(2) enforcing this treaty;\n(3) managing equitable distribution of AI-driven economic value.",
       "auto": "submit",
       "actions": [
         {
@@ -338,6 +341,7 @@
     {
       "title": "Coalition for a Baruch Plan for AI Open Call",
       "url": "https://www.cbpai.org/open-call-v1",
+      "description": "We call on all heads of state, President-Elect Trump and President Xi, and their advisors and security agencies, to engage in an open global treaty-making process for safe and fair AI of radically unprecedented scope, urgency and effectiveness.",
       "auto": "none",
       "actions": [
         {
@@ -396,6 +400,7 @@
     {
       "title": "ControlAI Public Statement",
       "url": "https://controlai.com/open-statement",
+      "description": "We must take decisive action right now. I call upon my government to secure our future and immediately introduce binding rules to prevent the development of dangerous AI models.",
       "auto": "submit",
       "actions": [
         {
@@ -437,6 +442,7 @@
     {
       "title": "Statement on AI Risk",
       "url": "https://safe.ai/work/statement-on-ai-risk",
+      "description": "Mitigating the risk of extinction from AI should be a global priority alongside other societal-scale risks such as pandemics and nuclear war.",
       "auto": "submit",
       "actions": [
         {
@@ -488,6 +494,7 @@
     {
       "title": "Pause Giant AI Experiments: An Open Letter",
       "url": "https://futureoflife.org/open-letter/pause-giant-ai-experiments/",
+      "description": "We call on all AI labs to immediately pause for at least 6 months the training of AI systems more powerful than GPT-4.",
       "auto": "submit",
       "actions": [
         {
@@ -579,6 +586,7 @@
     {
       "title": "Open letter calling on world leaders to show long-view leadership on existential threats",
       "url": "https://futureoflife.org/open-letter/long-view-leadership-on-existential-threats/",
+      "description": "Urgently calling on world leaders to adopt 'long-view leadership' in addressing existential threats facing humanity. Highlighting the escalating dangers of the climate crisis, pandemics, nuclear weapons, and unregulated AI, warning that current political responses are inadequate and overly focused on short-term solutions. It urges leaders to prioritize scientific evidence, global collaboration, and moral courage, advocating for policies that secure both present and future generations.",
       "auto": "submit",
       "actions": [
         {
@@ -651,7 +659,13 @@
     {
       "title": "Ban Superintelligence: Stop AI-Driven Human Extinction Risk Petition",
       "url": "https://www.change.org/p/ban-superintelligence-stop-ai-driven-human-extinction-risk",
+      "description": "1) Address Risks of Artificial Intelligence: Stand against superintelligent AI led human extinction risk, job losses, privacy invasion, misinformation spread, weaponization, and value misalignment.\n2) Protect Our Future: Issue an immediate stop on superintelligent AI until proven to be controllable, safe and aligned with human interests. Your signature is key.\n3) Unite for Change: Join a global call for transparent, ethical and safe AI that respects humanity. Demand oversight and international regulation to protect this generation and the upcoming generations.",
       "auto": "submit",
+      "actions": [
+        {
+          "button[data-testid='cookie-wall-reject']": "click"
+        }
+      ],
       "submit": "button[data-testid='signform-submit-button']",
       "fields": [
         {
@@ -679,7 +693,7 @@
           "id": "-consent-petition-wins-ban-superintelligence",
           "label": "Tell me if this petition wins, and how I can help other relevant petitions",
           "required": false,
-          "querySelector": "[name='gdprConsent']",
+          "querySelector": "input[name='gdprConsent']",
           "inputType": ["Yes", "No"]
         },
         {
@@ -694,7 +708,13 @@
     {
       "title": "Time is running out: Demand responsible AI development! Petition",
       "url": "https://www.change.org/p/artificial-intelligence-time-is-running-out-for-responsible-ai-development-2a2f1a13-b63a-4d8c-979b-b144bded2f48",
+      "description": "1) The creation of clear ethical guidelines for AI development that promote respect for human rights, citizen privacy and social justice.\n2) The creation of a binding, national and international regulatory framework for AI developers and companies that ensures AI systems are transparent, fair and non-discriminatory.\n3) The promotion of research and collaboration on AI safety, fairness and accountability to minimise potential negative impacts of AI systems.",
       "auto": "submit",
+      "actions": [
+        {
+          "button[data-testid='cookie-wall-reject']": "click"
+        }
+      ],
       "submit": "button[data-testid='signform-submit-button']",
       "fields": [
         {
@@ -722,7 +742,7 @@
           "id": "-consent-petition-wins-time-running",
           "label": "Tell me if this petition wins, and how I can help other relevant petitions",
           "required": false,
-          "querySelector": "[name='gdprConsent']",
+          "querySelector": "input[name='gdprConsent']",
           "inputType": ["Yes", "No"]
         },
         {
@@ -737,6 +757,7 @@
     {
       "title": "Urging an International AI Treaty: An Open Letter",
       "url": "https://aitreaty.org/",
+      "description": "An open letter calling for an international treaty to address the catastrophic risks posed by advanced AI systems. The letter urges governments to adopt global safety measures-such as compute thresholds, a collaborative AI safety lab, safe API standards, and a compliance commission-to prevent misuse and loss of control. Supported by leading AI experts, the initiative seeks broad international cooperation to ensure AI is developed safely and its benefits are shared by all humanity.",
       "auto": "none",
       "actions": [
         {
@@ -796,7 +817,13 @@
     {
       "title": "US must lead the way on a Global AI Treaty to ban unsafe superhuman AI",
       "url": "https://www.change.org/p/the-us-must-lead-the-way-on-a-global-ai-treaty-to-ban-unsafe-superhuman-ai",
+      "description": "A petition urging the United States to lead global negotiations for an international treaty banning the development of superintelligent AI systems until they can be proven safe. It warns that unchecked AI development by a few companies could threaten humanity, but argues that international cooperation-similar to past agreements on nuclear weapons and environmental protection-can prevent disaster and ensure human control over AI’s future.",
       "auto": "submit",
+      "actions": [
+        {
+          "button[data-testid='cookie-wall-reject']": "click"
+        }
+      ],
       "submit": "button[data-testid='signform-submit-button']",
       "fields": [
         {
@@ -824,7 +851,7 @@
           "id": "-consent-petition-wins-us-must",
           "label": "Tell me if this petition wins, and how I can help other relevant petitions",
           "required": false,
-          "querySelector": "[name='gdprConsent']",
+          "querySelector": "input[name='gdprConsent']",
           "inputType": ["Yes", "No"]
         },
         {
@@ -839,6 +866,7 @@
     {
       "title": "Lethal Autonomous Weapons Pledge",
       "url": "https://futureoflife.org/open-letter/lethal-autonomous-weapons-pledge/",
+      "description": "Artificial intelligence (AI) is poised to play an increasing role in military systems. There is an urgent opportunity and necessity for citizens, policymakers, and leaders to distinguish between acceptable and unacceptable uses of AI. In this light, we the undersigned agree that the decision to take a human life should never be delegated to a machine.",
       "auto": "submit",
       "actions": [
         {
@@ -1121,6 +1149,7 @@
     {
       "title": "Autonomous Weapons Open Letter: AI & Robotics Researchers",
       "url": "https://futureoflife.org/open-letter/open-letter-autonomous-weapons-ai-robotics/",
+      "description": "Autonomous weapons select and engage targets without human intervention. Artificial Intelligence (AI) technology has reached a point where the deployment of such systems is — practically if not legally — feasible within years, not decades, and the stakes are high: autonomous weapons have been described as the third revolution in warfare, after gunpowder and nuclear arms.",
       "auto": "none",
       "submit": "",
       "fields": []
@@ -1128,6 +1157,7 @@
     {
       "title": "Open Letter in Support of AB 501",
       "url": "https://canicoalition.com/letter",
+      "description": "This open letter, endorsed by leading academics and advocates, supports California Assembly Bill 501 (AB 501), which aims to close a loophole allowing nonprofits to privatize assets meant for public benefit. The letter criticizes OpenAI for shifting from its original charitable mission to private control, calling this a breach of public trust and fiduciary duty. The signatories urge lawmakers to preserve nonprofit integrity and prevent the expropriation of technology intended for humanity.",
       "auto": "submit",
       "actions": [
         {
@@ -1176,6 +1206,7 @@
     {
       "title": "Statement on AI training",
       "url": "https://www.aitrainingstatement.org/",
+      "description": "The unlicensed use of creative works for training generative AI is a major, unjust threat to the livelihoods of the people behind those works, and must not be permitted.",
       "auto": "none",
       "submit": "form button[type='submit']",
       "fields": [
