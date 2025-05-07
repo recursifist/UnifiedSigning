@@ -75,9 +75,9 @@ const autoSignerStep = () => {
       autoSigner.details = details
       autoSigner.entity = $entityName
       autoSigner.run()
-      autoSigner.addEventListener('retry', (documentsToRetry) => {
-        // Retry unsuccessful documents
-        autoSigner.documents = autoSigner.documents.filter(x => documentsToRetry.includes(x.title))
+      autoSigner.addEventListener('retry', (event) => {
+        autoSigner.webpages = autoSigner.webpages.filter(x => event.detail.includes(x.title))
+        autoSigner.documents = autoSigner.documents.filter(x => event.detail.includes(x))
         autoSigner.run()
       })
       return autoSigner
