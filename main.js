@@ -30,7 +30,7 @@ const createStep = (init, onDone) => {
 const docSelectorStep = (onDone) => {
   const init = () => {
     const docSelector = document.createElement('document-selector')
-    docSelector.documents = $webpages.map(x => ({ title: x.title, url: x.url, selected: true }))
+    docSelector.documents = $webpages.map(x => ({ title: x.title, url: x.url, description: x.description, selected: true }))
     return docSelector
   }
   createStep(init, onDone)
