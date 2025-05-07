@@ -34,9 +34,11 @@ class DocumentSelector extends HTMLElement {
           <div>
             <input type="checkbox" name="documentOptions" data-idx="${i}" ${x.selected ? 'checked' : ''}>
           </div>
-          <div>
+          <div class="description">
             ${x.title}
-            <a class="sublink" href="${x.url}" target="_blank" rel="noopener noreferrer">[view]</a>
+            <div>${x.description || ''}
+            <a class="sublink" href="${x.url}" target="_blank" rel="noopener noreferrer">Read more⇾</a>
+            </div>
           </div>
         </div>
       </label>
