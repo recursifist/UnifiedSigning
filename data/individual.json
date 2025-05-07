@@ -679,7 +679,7 @@
           "id": "-consent-petition-wins-ban-superintelligence",
           "label": "Tell me if this petition wins, and how I can help other relevant petitions",
           "required": false,
-          "querySelector": "[data-testid='signform-gdprConsent-optIn-radio']",
+          "querySelector": "[name='gdprConsent']",
           "inputType": ["Yes", "No"]
         },
         {
@@ -722,7 +722,7 @@
           "id": "-consent-petition-wins-time-running",
           "label": "Tell me if this petition wins, and how I can help other relevant petitions",
           "required": false,
-          "querySelector": "[data-testid='signform-gdprConsent-optIn-radio']",
+          "querySelector": "[name='gdprConsent']",
           "inputType": ["Yes", "No"]
         },
         {
@@ -824,7 +824,7 @@
           "id": "-consent-petition-wins-us-must",
           "label": "Tell me if this petition wins, and how I can help other relevant petitions",
           "required": false,
-          "querySelector": "[data-testid='signform-gdprConsent-optIn-radio']",
+          "querySelector": "[name='gdprConsent']",
           "inputType": ["Yes", "No"]
         },
         {
