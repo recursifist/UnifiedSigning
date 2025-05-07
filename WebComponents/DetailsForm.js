@@ -76,6 +76,10 @@ class DetailsForm extends HTMLElement {
     return this.fields.some(x => x.id === 'full-name')
   }
 
+  noDetailFields() {
+    return Object.keys(this.details).length === 0
+  }
+
   removeToken(nameid) {
     return nameid?.slice(0, nameid?.length - 3)
   }
@@ -222,9 +226,10 @@ class DetailsForm extends HTMLElement {
       <form id="DetailsForm">
         <h3 class="header">Fill in your details:</h3>
         <div class="flex">
-          ${this.getFieldsHtml()}
+          ${this.noDetailFields() ? 'Unfortunately the documents you selected cannot be auto-signed. <br>Continue for manual signing.' : this.getFieldsHtml()}
         </div>
         <button id="submit-button" type="submit">Submit</button>
+        <div class="subheader">(May take several minutes, please be patient.)</div>
         <input name="retype-email" type="text" class="quiet" />
       </form>
       </div>

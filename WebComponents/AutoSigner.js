@@ -161,7 +161,7 @@ class AutoSigner extends HTMLElement {
   }
 
   resetUIState() {
-    this.message = `Starting, this may take a few minutes - don't close this window.`
+    this.message = `Starting auto-signing...`
     this.showRetry = false
     this.loading = true
     this.index = 0
@@ -195,10 +195,11 @@ class AutoSigner extends HTMLElement {
         break
 
       case "complete":
+        this.showRetry = false
         this.loading = false
-        this.message = this.results.every(x => x === 'success')
-          ? 'Signing complete!'
-          : 'Complete! However some manual signing is required.'
+        this.message = this.results.every(x => x.value === 'success')
+          ? 'Finished.'
+          : 'Finished, some manual signing is required.'
         this.index = this.documents.length
 
         source.close()
@@ -275,7 +276,13 @@ class AutoSigner extends HTMLElement {
         <h3 class="header">
           (${Math.min(this.index, this.documents?.length)}/${this.documents?.length})
           ${this.message}
-          ${this.loading ? `<div class="loader"></div>` : ''}
+          ${this.loading
+        ? `<div class="subheader">
+                <div class="loader"></div>
+                The process may take several minutes - don't close this window. 
+              </div>`
+        : ''
+      }
         </h3>
         <div>
             ${progressList}
@@ -289,11 +296,11 @@ class AutoSigner extends HTMLElement {
 
     this.shadowRoot.getElementById('retryButton').addEventListener('click', (e) => {
       e.target.disabled = true
-      const documentsToRetry = this.results
-        .filter(x => (typeof x.value) === "undefined" || ["processing", "failure"].includes(x.value))
+      const retryDocuments = this.results
+        .filter(x => ((typeof x.value) === "undefined") || ["processing", "failure"].includes(x.value))
         .map(x => x.title)
       setTimeout(() => {
-        this.dispatchEvent(new CustomEvent('retry', documentsToRetry))
+        this.dispatchEvent(new CustomEvent('retry', { detail: retryDocuments }))
       }, 1500)
     })
 

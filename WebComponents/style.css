@@ -220,6 +220,7 @@ button:focus {
   outline: none;
   padding: 12px 24px;
   margin-top: var(--gap);
+  margin-right: var(--gap);
   cursor: pointer;
 }
 
@@ -402,9 +403,10 @@ a.sublink {
 
 .loader {
   display: inline-block;
-  width: 9px;
+  width: 6px;
   padding: 4px;
-  margin-bottom: -2px;
+  margin-left: 2px;
+  margin-bottom: -4px;
   aspect-ratio: 1;
   border-radius: 50%;
   background: var(--primary);

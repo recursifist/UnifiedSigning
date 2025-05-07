@@ -45,7 +45,10 @@ class DocumentSelector extends HTMLElement {
     this.shadowRoot.innerHTML = `
       ${style}
       <div class="container loading">
-        <h3 class="header">Choose which documents to sign:</h3>
+        <h3 class="header">
+        Choose which documents to sign:
+        </h3>
+        
         <div>
           ${checkboxes}
         </div>
@@ -63,6 +66,7 @@ class DocumentSelector extends HTMLElement {
 
     this.shadowRoot.getElementById('submit-button').addEventListener('click', () => {
       const selectedDocs = this.documents.filter(s => s.selected).map(d => d.title)
+      if(selectedDocs.length < 1) return
       this.dispatchEvent(new CustomEvent('completed', { detail: selectedDocs }))
     })
 
