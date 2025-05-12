@@ -229,6 +229,7 @@ class AutoSigner extends HTMLElement {
 
   connectedCallback() {
     this.render()
+    this.shadowRoot.getElementById("#DetailsForm").scrollIntoView()
   }
 
   render() {
