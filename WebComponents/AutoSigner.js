@@ -229,7 +229,9 @@ class AutoSigner extends HTMLElement {
 
   connectedCallback() {
     this.render()
-    this.shadowRoot.getElementById("#DetailsForm").scrollIntoView()
+    setTimeout(() => {
+      this.shadowRoot.getElementById("AutoSigner").scrollIntoView()
+    }, 500)
   }
 
   render() {
@@ -273,7 +275,7 @@ class AutoSigner extends HTMLElement {
       "</ul>"
 
     this.shadowRoot.innerHTML = style +
-      `<div class="container loading">
+      `<div id="AutoSigner" class="container loading">
         <h3 class="header">
           (${Math.min(this.index, this.documents?.length)}/${this.documents?.length})
           ${this.message}

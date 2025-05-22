@@ -184,7 +184,13 @@ template {
 
 
 
-/* Start app css */
+
+
+
+
+
+
+/* Start custom app css */
 :host {
   font-family: "Lato", "Lato Placeholder", sans-serif;
   -webkit-font-smoothing: antialiased;
@@ -195,6 +201,10 @@ template {
   --gap: 1rem;
   --radius: 8px;
   word-break: break-word;
+}
+
+body {
+  padding: 1rem;
 }
 
 .container {

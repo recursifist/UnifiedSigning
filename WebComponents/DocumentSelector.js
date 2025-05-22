@@ -15,7 +15,9 @@ class DocumentSelector extends HTMLElement {
 
   connectedCallback() {
     this.render()
-    this.shadowRoot.getElementById("#DetailsForm").scrollIntoView()
+    setTimeout(() => {
+      this.shadowRoot.getElementById("DocumentSelector").scrollIntoView()
+    }, 500)
   }
 
   render() {
@@ -47,7 +49,7 @@ class DocumentSelector extends HTMLElement {
 
     this.shadowRoot.innerHTML = `
       ${style}
-      <div class="container loading">
+      <div id="DocumentSelector" class="container loading">
         <h3 class="header">
         Choose which documents to sign:
         </h3>

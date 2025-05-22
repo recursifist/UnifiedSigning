@@ -202,7 +202,9 @@ class DetailsForm extends HTMLElement {
 
   connectedCallback() {
     this.render()
-    this.shadowRoot.getElementById("#DetailsForm").scrollIntoView()
+    setTimeout(() => {
+      this.shadowRoot.getElementById("DetailsForm").scrollIntoView()
+    }, 500)
     // if (!window.grecaptcha) {
     //   const script = document.createElement('script')
     //   script.src = 'https://www.google.com/recaptcha/api.js?render=YOUR_SITE_KEY'
