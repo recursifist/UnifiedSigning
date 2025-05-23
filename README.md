@@ -10,7 +10,12 @@ It can take ten minutes to complete scrapping all sites and attempt auto-complet
 
 ## Web access
 
-[unifiedsigning.xyz](https://unifiedsigning.xyz/)
+[UnifiedSigning.xyz](https://unifiedsigning.xyz/)
+
+Embed code:  
+```
+<iframe width="100%" height="100%" src="https://unifiedsigning.xyz/"></iframe>
+```
 
 
 ## Dev
