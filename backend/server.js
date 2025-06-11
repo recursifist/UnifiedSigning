@@ -1,6 +1,8 @@
 const express = require('express')
 const cors = require('cors')
 const crypto = require('crypto')
+const fs = require('fs')
+const path = require('path')
 const config = require('./config')
 const api = require('./api')
 const app = express()
@@ -70,6 +72,23 @@ app.post('/run', async (req, res) => {
 app.get('/run/:jobId', (req, res) => {
   const { jobId } = req.params
   api.getSSE(req, res, jobId, jobs)
+})
+
+app.get('/n/:x', (req, res) => {
+  const FILE = path.join(__dirname, 'n.json')
+  const key = req.params.x
+  fs.readFile(FILE, 'utf8', (err, data) => {
+    let counts = {}
+    if (!err && data) {
+      try {
+        counts = JSON.parse(data)
+      } catch (e) { counts = {} }
+    }
+    counts[key] = (counts[key] || 0) + 1
+
+    fs.writeFile(FILE, JSON.stringify(counts, null, 2))
+    res.status(200).send()
+  })
 })
 
 app.listen(config.port, () => console.log('Ready on port ' + config.port))
